@@ -3,8 +3,7 @@ tags:
 summary: Return "Hello world"
 operationId: getHelloWorld
 description: 'Returns a greeting message'
-security:
-  - bearerAuth: []
+security: []
 responses:
   '200':
     description: Successfully server check!
