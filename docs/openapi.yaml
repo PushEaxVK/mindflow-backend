@@ -7,44 +7,15 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: A RESTful backend service for a contact management web application. It provides secure user authentication (registration, login, token-based access) and full CRUD functionality for managing personal contact data. Built with scalability and security in mind, the API ensures that each user's data is isolated and protected.
 tags:
-  - name: Contacts
-    description: Operations about contacts.
-  - name: Auth
-    description: Auth operations.
+  - name: Index
+    description: Check server.
 servers:
   - url: http://localhost:3000
-  - url: https://contacts-app-97il.onrender.com
+  - url: https://mindflow-backend-iwk7.onrender.com
 paths:
-  /contacts/{id}:
+  /:
     get:
-      $ref: ../swagger/paths/contacts/{id}/get.yaml
-    patch:
-      $ref: ../swagger/paths/contacts/{id}/patch.yaml
-    delete:
-      $ref: ../swagger/paths/contacts/{id}/delete.yaml
-  /contacts:
-    get:
-      $ref: ../swagger/paths/contacts/get.yaml
-    post:
-      $ref: ../swagger/paths/contacts/post.yaml
-  /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register/post.yaml
-  /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login/post.yaml
-  /auth/refresh:
-    post:
-      $ref: ../swagger/paths/auth/refresh/post.yaml
-  /auth/logout:
-    post:
-      $ref: ../swagger/paths/auth/logout/post.yaml
-  /auth/send-reset-email:
-    post:
-      $ref: ../swagger/paths/auth/send-reset-email/post.yaml
-  /auth/reset-pwd:
-    post:
-      $ref: ../swagger/paths/auth/reset-pwd/post.yaml
+      $ref: ../swagger/paths/index/get.yaml
 components:
   securitySchemes:
     bearerAuth:
