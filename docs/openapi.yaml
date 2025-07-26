@@ -4,9 +4,17 @@ info:
   title: Harmoniq Backend API
   description: >
     API для керування статтями, авторизацією та збереженими статтями у проекті Harmoniq.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
 servers:
   - url: http://localhost:3000
-  - url: https://mindflow-backend-iwk7.onrender.com
+    
+  - url: https://mindflow-backend-s1cw.onrender.com/api-docs
+
+security:
+  - bearerAuth: []
 
 tags:
   - name: Auth
@@ -18,6 +26,7 @@ paths:
   /auth/register:
     post:
       summary: Реєстрація нового користувача
+      operationId: registerUser
       tags: [Auth]
       requestBody:
         required: true
@@ -38,10 +47,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+        '422':
+          description: Некоректні дані
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /auth/login:
     post:
       summary: Логін користувача (отримання JWT)
+      operationId: loginUser
       tags: [Auth]
       requestBody:
         required: true
@@ -65,12 +80,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-    /articles/create:
+        '422':
+          description: Некоректні дані
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/create:
     post:
       summary: Створення нової статті (авторизація)
+      operationId: createArticle
       tags: [Articles]
-      security:
-        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -84,14 +105,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
-        '401':
-          description: Неавторизовано
+        '400':
+          description: Невалідні дані
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '400':
-          description: Невалідні дані
+        '401':
+          description: Неавторизовано
           content:
             application/json:
               schema:
@@ -100,31 +121,43 @@ paths:
   /articles:
     get:
       summary: Отримати список статей (з пагінацією, фільтрацією, сортуванням)
+      operationId: getArticles
       tags: [Articles]
       parameters:
         - in: query
           name: page
-          schema: { type: integer, default: 1 }
+          schema:
+            type: integer
+            default: 1
           description: Номер сторінки
         - in: query
           name: limit
-          schema: { type: integer, default: 10 }
+          schema:
+            type: integer
+            default: 10
           description: Кількість статей на сторінку
         - in: query
           name: sort
-          schema: { type: string, example: createdAt }
+          schema:
+            type: string
+            example: createdAt
           description: Поле для сортування
         - in: query
           name: order
-          schema: { type: string, enum: [asc, desc], default: desc }
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
           description: Порядок сортування
         - in: query
           name: tags
-          schema: { type: string }
+          schema:
+            type: string
           description: Список тегів через кому
         - in: query
           name: author
-          schema: { type: string }
+          schema:
+            type: string
           description: ID автора
       responses:
         '200':
@@ -134,9 +167,12 @@ paths:
               schema:
                 type: object
                 properties:
-                  total: { type: integer }
-                  page: { type: integer }
-                  limit: { type: integer }
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
                   articles:
                     type: array
                     items:
@@ -151,6 +187,7 @@ paths:
   /articles/popular:
     get:
       summary: Отримати популярні статті
+      operationId: getPopularArticles
       tags: [Articles]
       responses:
         '200':
@@ -161,16 +198,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Article'
+        '404':
+          description: Не знайдено жодної статті
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /articles/{id}:
     get:
       summary: Отримати одну статтю по id
+      operationId: getArticleById
       tags: [Articles]
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string }
+          schema:
+            type: string
           description: ID статті
       responses:
         '200':
@@ -187,14 +232,15 @@ paths:
                 $ref: '#/components/schemas/Error'
     patch:
       summary: Редагування статті (автор/адмін)
+      operationId: updateArticle
       tags: [Articles]
-      security:
-        - bearerAuth: []
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+          description: ID статті
       requestBody:
         required: true
         content:
@@ -228,14 +274,15 @@ paths:
                 $ref: '#/components/schemas/Error'
     delete:
       summary: Видалення статті (автор/адмін)
+      operationId: deleteArticle
       tags: [Articles]
-      security:
-        - bearerAuth: []
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+          description: ID статті
       responses:
         '200':
           description: Стаття видалена
@@ -269,14 +316,15 @@ paths:
   /articles/{id}/save:
     post:
       summary: Зберегти статтю для користувача
+      operationId: saveArticle
       tags: [Articles]
-      security:
-        - bearerAuth: []
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+          description: ID статті
       responses:
         '200':
           description: Стаття збережена
@@ -285,7 +333,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  message: { type: string, example: Article saved successfully }
+                  message:
+                    type: string
+                    example: Article saved successfully
         '400':
           description: Стаття вже у saved
           content:
@@ -306,14 +356,15 @@ paths:
                 $ref: '#/components/schemas/Error'
     delete:
       summary: Видалити статтю із saved
+      operationId: removeSavedArticle
       tags: [Articles]
-      security:
-        - bearerAuth: []
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string }
+          schema:
+            type: string
+          description: ID статті
       responses:
         '200':
           description: Стаття видалена із saved
@@ -322,7 +373,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  message: { type: string, example: Article removed from saved }
+                  message:
+                    type: string
+                    example: Article removed from saved
         '400':
           description: Статті не було у saved
           content:
@@ -345,9 +398,8 @@ paths:
   /articles/saved:
     get:
       summary: Отримати збережені користувачем статті
+      operationId: getSavedArticles
       tags: [Articles]
-      security:
-        - bearerAuth: []
       responses:
         '200':
           description: Список збережених статей
@@ -363,12 +415,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-              
-  components:
+        '404':
+          description: Не знайдено збережених статей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+
   schemas:
     RegisterUser:
       type: object
@@ -383,6 +442,7 @@ paths:
         password:
           type: string
           example: secretpass
+
     LoginUser:
       type: object
       required: [email, password]
@@ -393,6 +453,7 @@ paths:
         password:
           type: string
           example: secretpass
+
     User:
       type: object
       properties:
@@ -402,6 +463,7 @@ paths:
           type: string
         email:
           type: string
+
     CreateArticle:
       type: object
       required: [title, text]
@@ -420,6 +482,7 @@ paths:
         image:
           type: string
           example: https://site.com/images/img.jpg
+
     Article:
       type: object
       properties:
@@ -443,17 +506,12 @@ paths:
         updatedAt:
           type: string
           format: date-time
+
     Error:
       type: object
       properties:
         message:
           type: string
-    
 
-
-        
-
-             
-              
 
 
