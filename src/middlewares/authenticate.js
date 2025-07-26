@@ -1,11 +1,10 @@
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 import { SessionsCollection } from '../db/models/sessions.js';
-import User from '../db/models/users.js'; 
+import User from '../db/models/users.js';
 
 export const authenticate = async (req, res, next) => {
   const authHeader = req.get('Authorization');
-
   if (!authHeader) {
     throw createHttpError(401, 'Please provide Authorization header');
   }
@@ -16,7 +15,7 @@ export const authenticate = async (req, res, next) => {
   if (bearer !== 'Bearer' || !token) {
     throw createHttpError(401, 'Auth header should be of type Bearer');
   }
-
+  
   const session = await SessionsCollection.findOne({ accessToken: token });
 
   if (!session) {
@@ -40,11 +39,7 @@ export const authenticate = async (req, res, next) => {
       ? new mongoose.Types.ObjectId(session.userId)
       : session.userId,
   });
-
-  if (!user) {
-    throw createHttpError(401, 'User not found');
-  }
-
+  
   req.user = user;
   next(); 
 };
