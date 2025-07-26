@@ -17,6 +17,16 @@ const usersSchema = new Schema(
       type: String,
       required: true,
     },
+    savedArticles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Article',
+      },
+    ],
+    role: {
+      type: String,
+      default: 'user',
+    },
   },
   {
     timestamps: true,
@@ -30,4 +40,9 @@ usersSchema.methods.toJSON = function () {
   return obj;
 };
 
-export const UsersCollection = model('users', usersSchema);
+const User = model('User', usersSchema, 'users');
+export default User;
+
+
+
+
