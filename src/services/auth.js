@@ -3,12 +3,13 @@ import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 import { UsersCollection } from '../db/models/users.js';
 import { SessionsCollection } from '../db/models/sessions.js';
+import { FIFTEEN_MINUTES, THERTY_DAYS } from '../constants/index.js';
 
 const createSession = () => ({
   accessToken: crypto.randomBytes(30).toString('base64'),
   refreshToken: crypto.randomBytes(30).toString('base64'),
-  accessTokenValidUntil: new Date(Date.now() + 1000 * 60 * 15),
-  refreshTokenValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+  accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+  refreshTokenValidUntil: new Date(Date.now() + THERTY_DAYS),
 });
 
 export const loginUser = async (payload) => {
