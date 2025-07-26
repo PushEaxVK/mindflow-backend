@@ -1,7 +1,7 @@
 import createHttpError from 'http-errors';
-import jwt from 'jsonwebtoken';
-import { UsersCollection } from '../db/models/users.js';
-import { ENV_VARS } from '../constants/envVars.js';
+import mongoose from 'mongoose';
+import { SessionsCollection } from '../db/models/sessions.js';
+import User from '../db/models/users.js';
 
 export const authenticate = async (req, res, next) => {
   const authHeader = req.get('Authorization');
@@ -9,22 +9,38 @@ export const authenticate = async (req, res, next) => {
     throw createHttpError(401, 'Please provide Authorization header');
   }
 
-  const [bearer, token] = authHeader.split(' ');
+  const [bearer, rawToken] = authHeader.split(' ');
+  const token = rawToken?.trim();
+
   if (bearer !== 'Bearer' || !token) {
     throw createHttpError(401, 'Auth header should be of type Bearer');
   }
+  
+  const session = await SessionsCollection.findOne({ accessToken: token });
 
-  const payload = jwt.verify(token, ENV_VARS.JWT_ACCESS_SECRET);
-
-  const user = await UsersCollection.findById(payload.userId);
-  if (!user) {
-    throw createHttpError(401, 'User not found');
+  if (!session) {
+    throw createHttpError(401, 'Session not found');
   }
 
-  if (req.params.userId && req.params.userId !== user._id.toString()) {
-    throw createHttpError(403, 'Forbidden: access denied for this userId');
+  const isAccessTokenExpired = new Date() > new Date(session.accessTokenValidUntil);
+
+  if (isAccessTokenExpired) {
+    throw createHttpError(401, 'Access token expired');
   }
 
+  console.log('Looking for user with id:', session.userId);
+  console.log('Found session:', session);
+  console.log('Trying to find user with _id:', session.userId);
+  console.log('Type of session.userId:', typeof session.userId);
+  console.log('Is valid ObjectId:', mongoose.Types.ObjectId.isValid(session.userId));
+
+  const user = await User.findOne({
+    _id: mongoose.Types.ObjectId.isValid(session.userId)
+      ? new mongoose.Types.ObjectId(session.userId)
+      : session.userId,
+  });
+  
   req.user = user;
-  next();
+  next(); 
 };
+

@@ -1,24 +1,515 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: MindFlow Backend API
+  title: Harmoniq Backend API
+  description: >
+    API для керування статтями, авторизацією та збереженими статтями у проекті Harmoniq.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: A RESTful backend service for a contact management web application. It provides secure user authentication (registration, login, token-based access) and full CRUD functionality for managing personal contact data. Built with scalability and security in mind, the API ensures that each user's data is isolated and protected.
-tags:
-  - name: Index
-    description: Check server.
+
 servers:
   - url: http://localhost:3000
-  - url: https://mindflow-backend-iwk7.onrender.com
+    
+  - url: https://mindflow-backend-s1cw.onrender.com/api-docs
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Auth
+    description: Реєстрація та логін
+  - name: Articles
+    description: Операції зі статтями
+
 paths:
-  /:
+  /auth/register:
+    post:
+      summary: Реєстрація нового користувача
+      operationId: registerUser
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUser'
+      responses:
+        '201':
+          description: Користувач успішно зареєстрований
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Користувач вже існує
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Некоректні дані
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/login:
+    post:
+      summary: Логін користувача (отримання JWT)
+      operationId: loginUser
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: Логін успішний, повертає JWT токен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Невірні облікові дані
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Некоректні дані
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/create:
+    post:
+      summary: Створення нової статті (авторизація)
+      operationId: createArticle
+      tags: [Articles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArticle'
+      responses:
+        '201':
+          description: Стаття створена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '400':
+          description: Невалідні дані
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles:
     get:
-      $ref: ../swagger/paths/index/get.yaml
+      summary: Отримати список статей (з пагінацією, фільтрацією, сортуванням)
+      operationId: getArticles
+      tags: [Articles]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Номер сторінки
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Кількість статей на сторінку
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: createdAt
+          description: Поле для сортування
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Порядок сортування
+        - in: query
+          name: tags
+          schema:
+            type: string
+          description: Список тегів через кому
+        - in: query
+          name: author
+          schema:
+            type: string
+          description: ID автора
+      responses:
+        '200':
+          description: Список статей з пагінацією
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Article'
+        '400':
+          description: Помилка запиту
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/popular:
+    get:
+      summary: Отримати популярні статті
+      operationId: getPopularArticles
+      tags: [Articles]
+      responses:
+        '200':
+          description: Популярні статті
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        '404':
+          description: Не знайдено жодної статті
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/{id}:
+    get:
+      summary: Отримати одну статтю по id
+      operationId: getArticleById
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID статті
+      responses:
+        '200':
+          description: Стаття знайдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '404':
+          description: Стаття не знайдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: Редагування статті (автор/адмін)
+      operationId: updateArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID статті
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArticle'
+      responses:
+        '200':
+          description: Стаття оновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Не автор або не адмін
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Стаття не знайдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Видалення статті (автор/адмін)
+      operationId: deleteArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID статті
+      responses:
+        '200':
+          description: Стаття видалена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Article deleted successfully
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Не автор або не адмін
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Стаття не знайдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/{id}/save:
+    post:
+      summary: Зберегти статтю для користувача
+      operationId: saveArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID статті
+      responses:
+        '200':
+          description: Стаття збережена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Article saved successfully
+        '400':
+          description: Стаття вже у saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Стаття не знайдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Видалити статтю із saved
+      operationId: removeSavedArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID статті
+      responses:
+        '200':
+          description: Стаття видалена із saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Article removed from saved
+        '400':
+          description: Статті не було у saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Стаття не знайдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/saved:
+    get:
+      summary: Отримати збережені користувачем статті
+      operationId: getSavedArticles
+      tags: [Articles]
+      responses:
+        '200':
+          description: Список збережених статей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        '401':
+          description: Неавторизовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Не знайдено збережених статей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      
+  schemas:
+    RegisterUser:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          example: Zoia Plus
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: secretpass
+
+    LoginUser:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: secretpass
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    CreateArticle:
+      type: object
+      required: [title, text]
+      properties:
+        title:
+          type: string
+          example: Нова стаття
+        text:
+          type: string
+          example: Тут текст статті...
+        tags:
+          type: array
+          items:
+            type: string
+          example: [здоровʼя, баланс]
+        image:
+          type: string
+          example: https://site.com/images/img.jpg
+
+    Article:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        text:
+          type: string
+        author:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        image:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
