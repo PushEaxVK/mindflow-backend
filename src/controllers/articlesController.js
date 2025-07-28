@@ -1,15 +1,16 @@
-import { 
-  getArticleById, 
-  getRecommendedArticles, 
+import {
+  getArticleById,
+  getRecommendedArticles,
   getSavedArticles,
   getPopularArticles,
-  getPaginatedArticles
+  getPaginatedArticles,
 } from '../services/articlesService.js';
 import { readFile } from 'fs/promises';
 import path from 'path';
 import Article from '../db/models/articleModel.js';
 import User from '../db/models/users.js';
-
+import { ROOT_DIR } from '../constants/paths.js';
+import mongoose from 'mongoose';
 
 export const fetchPopularArticles = async (req, res, next) => {
   try {
@@ -21,11 +22,17 @@ export const fetchPopularArticles = async (req, res, next) => {
   }
 };
 
-
 export const fetchAllArticles = async (req, res, next) => {
   try {
     const { page, limit, sort, order, tags, author } = req.query;
-    const data = await getPaginatedArticles({ page, limit, sort, order, tags, author });
+    const data = await getPaginatedArticles({
+      page,
+      limit,
+      sort,
+      order,
+      tags,
+      author,
+    });
     res.json(data);
   } catch (err) {
     next(err);
@@ -54,12 +61,21 @@ export const fetchRecommendedArticles = async (req, res, next) => {
 
 export const createManyArticles = async (req, res, next) => {
   try {
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
-    const filePath = path.join(__dirname, '../../articles.json');
+    const filePath = path.join(ROOT_DIR, '../articles.json');
     const data = await readFile(filePath, 'utf-8');
     const articles = JSON.parse(data);
 
-    await Article.insertMany(articles);
+    const normalizedArticles = articles.map((article) => {
+      return {
+        ...article,
+        _id: new mongoose.Types.ObjectId(article._id?.$oid || article._id),
+        author: new mongoose.Types.ObjectId(
+          article.author?.$oid || article.author,
+        ),
+      };
+    });
+
+    await Article.insertMany(normalizedArticles);
 
     res.status(201).json({ message: 'Articles added successfully' });
   } catch (err) {
@@ -75,7 +91,6 @@ export const deleteAllArticles = async (req, res, next) => {
     next(err);
   }
 };
-
 
 export const createSingleArticle = async (req, res, next) => {
   try {
@@ -137,7 +152,7 @@ export const removeSavedArticle = async (req, res, next) => {
 
     const initialLength = user.savedArticles.length;
     user.savedArticles = user.savedArticles.filter(
-      id => id.toString() !== articleId
+      (id) => id.toString() !== articleId,
     );
 
     if (user.savedArticles.length === initialLength) {
@@ -158,16 +173,18 @@ export const updateArticleById = async (req, res, next) => {
       return res.status(404).json({ message: 'Article not found' });
     }
     if (
-      article.author && 
+      article.author &&
       article.author.toString() !== req.user._id.toString() &&
       req.user.role !== 'admin'
     ) {
-      return res.status(403).json({ message: 'You are not the author or admin' });
+      return res
+        .status(403)
+        .json({ message: 'You are not the author or admin' });
     }
     const updatedArticle = await Article.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
     res.json(updatedArticle);
   } catch (err) {
@@ -182,11 +199,13 @@ export const deleteArticleById = async (req, res, next) => {
       return res.status(404).json({ message: 'Article not found' });
     }
     if (
-      article.author && 
+      article.author &&
       article.author.toString() !== req.user._id.toString() &&
       req.user.role !== 'admin'
     ) {
-      return res.status(403).json({ message: 'You are not the author or admin' });
+      return res
+        .status(403)
+        .json({ message: 'You are not the author or admin' });
     }
     await Article.findByIdAndDelete(req.params.id);
     res.json({ message: 'Article deleted successfully' });
@@ -194,22 +213,3 @@ export const deleteArticleById = async (req, res, next) => {
     next(err);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
