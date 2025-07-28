@@ -35,7 +35,6 @@ export const authenticate = async (req, res, next) => {
     } else if (err.name === 'NotBeforeError') {
       throw createHttpError(401, 'Token not active yet');
     }
-
     throw err;
   }
 };
