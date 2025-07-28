@@ -1,53 +1,66 @@
 import { loginUser, logoutUser, refreshSession } from '../services/auth.js';
 
-const setupSessionCookies = (session, res) => {
-  res.cookie('sessionId', session.id, {
-    httpOnly: true,
-    expires: session.refreshTokenValidUntil,
-  });
-  res.cookie('sessionToken', session.refreshToken, {
-    httpOnly: true,
-    expires: session.refreshTokenValidUntil,
-  });
-};
-
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
-
-  setupSessionCookies(session, res);
 
   res.json({
     status: 200,
     message: 'Successfully logged in a user!',
     data: {
       accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+      user: session.user,
     },
   });
 };
 
 export const logoutUserController = async (req, res) => {
-  const { sessionToken, sessionId } = req.cookies;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
 
-  await logoutUser(sessionId, sessionToken);
+  if (!token) {
+    return res.status(401).json({
+      status: 401,
+      message: 'Access token required',
+      data: {
+        message: 'No access token provided',
+      },
+    });
+  }
 
-  res.clearCookie('sessionToken');
-  res.clearCookie('sessionId');
+  await logoutUser(token);
 
-  res.status(204).send();
+  res.json({
+    status: 200,
+    message: 'Successfully logged out!',
+    data: {
+      message: 'User logged out successfully',
+    },
+  });
 };
 
 export const refreshSessionController = async (req, res) => {
-  const { sessionToken, sessionId } = req.cookies;
+  const { refreshToken } = req.body;
 
-  const session = await refreshSession(sessionId, sessionToken);
+  if (!refreshToken) {
+    return res.status(400).json({
+      status: 400,
+      message: 'Refresh token required',
+      data: {
+        message: 'No refresh token provided',
+      },
+    });
+  }
 
-  setupSessionCookies(session, res);
+  const session = await refreshSession(refreshToken);
 
   res.json({
     status: 200,
     message: 'Successfully refreshed a session!',
     data: {
       accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+      user: session.user,
     },
   });
 };

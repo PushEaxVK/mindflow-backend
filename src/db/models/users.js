@@ -57,8 +57,5 @@ usersSchema.methods.toJSON = function () {
 };
 
 const User = model('User', usersSchema, 'users');
+
 export default User;
-
-
-
-

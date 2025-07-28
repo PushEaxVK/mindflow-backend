@@ -1,50 +1,40 @@
 import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
-import { SessionsCollection } from '../db/models/sessions.js';
+import jwt from 'jsonwebtoken';
 import User from '../db/models/users.js';
 
 export const authenticate = async (req, res, next) => {
   const authHeader = req.get('Authorization');
+
   if (!authHeader) {
     throw createHttpError(401, 'Please provide Authorization header');
   }
 
-  const [bearer, rawToken] = authHeader.split(' ');
-  const token = rawToken?.trim();
+  const bearer = authHeader.split(' ')[0];
+  const token = authHeader.split(' ')[1];
 
   if (bearer !== 'Bearer' || !token) {
     throw createHttpError(401, 'Auth header should be of type Bearer');
   }
-  
-  const session = await SessionsCollection.findOne({ accessToken: token });
 
-  if (!session) {
-    throw createHttpError(401, 'Session not found');
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded._id || decoded.userId);
+
+    if (!user) {
+      throw createHttpError(401, 'User not found');
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      throw createHttpError(401, 'Access token expired');
+    } else if (err.name === 'JWTError') {
+      throw createHttpError(401, 'Invalid access token');
+    } else if (err.name === 'NotBeforeError') {
+      throw createHttpError(401, 'Token not active yet');
+    }
+    throw err;
   }
-
-  const isAccessTokenExpired = new Date() > new Date(session.accessTokenValidUntil);
-
-  if (isAccessTokenExpired) {
-    throw createHttpError(401, 'Access token expired');
-  }
-
-  console.log('Looking for user with id:', session.userId);
-  console.log('Found session:', session);
-  console.log('Trying to find user with _id:', session.userId);
-  console.log('Type of session.userId:', typeof session.userId);
-  console.log('Is valid ObjectId:', mongoose.Types.ObjectId.isValid(session.userId));
-
-  const user = await User.findOne({
-    _id: mongoose.Types.ObjectId.isValid(session.userId)
-      ? new mongoose.Types.ObjectId(session.userId)
-      : session.userId,
-  });
-  
-  if (!user) {
-    throw createHttpError(401, 'User not found');
-  }
-  
-  req.user = user;
-  next(); 
 };
-

@@ -1,5 +1,14 @@
 import Joi from 'joi';
 
+export const loginUserSchema = Joi.object({
+  email: Joi.string().trim().email().max(64).required(),
+  password: Joi.string().min(8).max(64).required(),
+});
+
+export const refreshSessionSchema = Joi.object({
+  refreshToken: Joi.string().required(),
+});
+
 export const registerUserSchema = Joi.object({
   name: Joi.string()
     .trim()
@@ -21,9 +30,4 @@ export const registerUserSchema = Joi.object({
     .messages({
       'string.pattern.base': 'Password must contain both letters and numbers',
     }),
-});
-
-export const loginUserSchema = Joi.object({
-  email: Joi.string().trim().email().max(64).required(),
-  password: Joi.string().min(8).max(64).required(),
 });
