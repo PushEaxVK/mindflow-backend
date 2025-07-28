@@ -1,10 +1,13 @@
 import bcrypt from 'bcrypt';
+// import crypto from 'node:crypto';
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import { UsersCollection } from '../db/models/users.js';
 import { SessionsCollection } from '../db/models/sessions.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { ENV_VARS } from '../constants/envVars.js';
+
+// import { FIFTEEN_MINUTES, THERTY_DAYS } from '../constants/index.js';
 
 const JWT_ACCESS_SECRET = getEnvVar(ENV_VARS.JWT_ACCESS_SECRET);
 const JWT_REFRESH_SECRET = getEnvVar(ENV_VARS.JWT_REFRESH_SECRET);
@@ -77,6 +80,27 @@ export const loginUser = async ({ email, password }) => {
   return await createUserSession(user._id);
 };
 
+// export const loginUser = async (payload) => {
+//   const user = await UsersCollection.findOne({ email: payload.email });
+//   if (!user) {
+//     throw createHttpError(401, 'User login and password does not match!');
+//   }
+//   const arePasswordsEqual = await bcrypt.compare(
+//     payload.password,
+//     user.password,
+//   );
+//   if (!arePasswordsEqual) {
+//     throw createHttpError(401, 'User login and password does not match!');
+//   }
+//   await SessionsCollection.findOneAndDelete({ userId: user._id });
+//   const session = await SessionsCollection.create({
+//     ...createSession(),
+//     userId: user._id,
+//   });
+//   return session;
+// };
+
+
 const generateAccessToken = (userId) => {
   return jwt.sign({ userId }, JWT_ACCESS_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRES_IN,
@@ -112,6 +136,13 @@ export const createUserSession = async (userId) => {
     refreshToken,
   };
 };
+
+// const createSession = () => ({
+//   accessToken: crypto.randomBytes(30).toString('base64'),
+//   refreshToken: crypto.randomBytes(30).toString('base64'),
+//   accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+//   refreshTokenValidUntil: new Date(Date.now() + THERTY_DAYS),
+// });
 
 export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   const session = await SessionsCollection.findOne({
@@ -154,6 +185,33 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
     refreshToken: newRefreshToken,
   };
 };
+
+// export const refreshSession = async (sessionId, sessionToken) => {
+//   const session = await SessionsCollection.findOne({
+//     _id: sessionId,
+//     refreshToken: sessionToken,
+//   });
+//   if (!session) {
+//     throw createHttpError(401, 'Session not found!');
+//   }
+//   if (session.refreshTokenValidUntil < new Date()) {
+//     await SessionsCollection.findByIdAndDelete(sessionId);
+//     throw createHttpError(401, 'Session expired!');
+//   }
+//   await SessionsCollection.findByIdAndDelete(sessionId);
+//   const newSession = await SessionsCollection.create({
+//     ...createSession(),
+//     userId: session.userId,
+//   });
+//   return newSession;
+// };
+
+// export const logoutUser = async (sessionId, sessionToken) => {
+//   await SessionsCollection.findOneAndDelete({
+//     _id: sessionId,
+//     refreshToken: sessionToken,
+//   });
+// };
 
 export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
