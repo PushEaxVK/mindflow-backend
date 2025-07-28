@@ -39,6 +39,15 @@ export const createSession = (userId) => {
   };
 };
 
+export const createUserSession = async (userId) => {
+  const sessionData = createSession(userId);
+  const session = await SessionsCollection.create({
+    userId,
+    refreshToken: sessionData.refreshToken,
+  });
+  return { _id: session._id, ...sessionData };
+};
+
 // const createSession = () => ({
 //   accessToken: crypto.randomBytes(30).toString('base64'),
 //   refreshToken: crypto.randomBytes(30).toString('base64'),
@@ -161,13 +170,13 @@ export const registerUser = async ({ name, email, password }) => {
       'Password must contain both letters and numbers',
     );
 
-  const existingUser = await UsersCollection.findOne({ email });
+  const existingUser = await User.findOne({ email });
   if (existingUser)
     throw createHttpError(409, 'A user with this email already exists');
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await UsersCollection.create({
+  const newUser = await User.create({
     name,
     email,
     password: hashedPassword,

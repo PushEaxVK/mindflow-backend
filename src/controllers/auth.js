@@ -4,6 +4,7 @@ import {
   refreshSession,
   registerUser,
   createSession,
+  createUserSession,
 } from '../services/auth.js';
 
 import { SEVEN_DAYS } from '../constants/index.js';
@@ -83,7 +84,7 @@ const cookieOptions = {
 export const registerUserController = async (req, res) => {
   try {
     const user = await registerUser(req.body);
-    const session = await createSession(user._id);
+    const session = await createUserSession(user._id);
 
     res.cookie('refreshToken', session.refreshToken, cookieOptions);
     res.cookie('sessionId', session._id.toString(), cookieOptions);
