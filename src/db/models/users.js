@@ -33,16 +33,6 @@ const usersSchema = new Schema(
       type: String,
       default: 'user',
     },
-    savedArticles: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Article',
-      },
-    ],
-    role: {
-      type: String,
-      default: 'user',
-    },
   },
   {
     timestamps: true,

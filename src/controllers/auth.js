@@ -1,4 +1,12 @@
-import { loginUser, logoutUser, refreshSession } from '../services/auth.js';
+import {
+  loginUser,
+  logoutUser,
+  refreshSession,
+  registerUser,
+  createSession,
+} from '../services/auth.js';
+
+import { SEVEN_DAYS } from '../constants/index.js';
 
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
@@ -63,4 +71,38 @@ export const refreshSessionController = async (req, res) => {
       user: session.user,
     },
   });
+};
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'Strict',
+  expires: new Date(Date.now() + SEVEN_DAYS),
+};
+
+export const registerUserController = async (req, res) => {
+  try {
+    const user = await registerUser(req.body);
+    const session = await createSession(user._id);
+
+    res.cookie('refreshToken', session.refreshToken, cookieOptions);
+    res.cookie('sessionId', session._id.toString(), cookieOptions);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully registered user!',
+      data: {
+        user,
+        accessToken: session.accessToken,
+      },
+    });
+  } catch (error) {
+    console.error('Register error:', error.message);
+    const statusCode = error.status || 400;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: error.message || 'Registration failed',
+      data: null,
+    });
+  }
 };
