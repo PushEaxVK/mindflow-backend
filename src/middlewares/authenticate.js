@@ -1,8 +1,15 @@
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import User from '../db/models/users.js';
+import { SessionsCollection } from '../db/models/sessions.js';
 
 export const authenticate = async (req, res, next) => {
+  const sessionId = req.cookies.sessionId;
+
+  if (!sessionId) {
+    throw createHttpError(401, 'Session not found');
+  }
+
   const authHeader = req.get('Authorization');
 
   if (!authHeader) {
@@ -23,6 +30,15 @@ export const authenticate = async (req, res, next) => {
 
     if (!user) {
       throw createHttpError(401, 'User not found');
+    }
+
+    const session = await SessionsCollection.findOne({
+      _id: sessionId,
+      userId: decoded.userId || decoded._id,
+    });
+
+    if (!session) {
+      throw createHttpError(401, 'Session not found!');
     }
 
     req.user = user;
