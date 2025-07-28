@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../db/models/users.js';
-import { UsersCollection } from '../db/models/users.js';
+// import { UsersCollection } from '../db/models/users.js';
 // import crypto from 'node:crypto';
 import createHttpError from 'http-errors';
 import { SessionsCollection } from '../db/models/sessions.js';
@@ -79,10 +79,9 @@ const createSession = (userId) => {
 //   };
 // };
 
-
 export const loginUser = async (payload) => {
   const user = await User.findOne({ email: payload.email });
-  
+
   const sessionData = createSession(user._id);
 
   await SessionsCollection.create({
@@ -243,7 +242,6 @@ export const refreshSession = async (refreshToken) => {
     throw err;
   }
 };
-
 
 // export const refreshUserSession = async ({ sessionId, refreshToken }) => {
 //   const session = await SessionsCollection.findOne({
