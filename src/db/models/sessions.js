@@ -7,25 +7,18 @@ const sessionsSchema = new Schema(
       ref: 'users',
       required: true,
     },
-    accessToken: {
-      type: String,
-      required: true,
-    },
     refreshToken: {
       type: String,
       required: true,
     },
-    accessTokenValidUntil: {
+    createdAt: {
       type: Date,
-      required: true,
-    },
-    refreshTokenValidUntil: {
-      type: Date,
-      required: true,
+      default: Date.now,
+      expires: '7d',
     },
   },
   {
-    timestamps: false,
+    timestamps: true,
     versionKey: false,
   },
 );

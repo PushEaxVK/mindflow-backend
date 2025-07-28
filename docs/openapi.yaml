@@ -426,7 +426,8 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-
+      bearerFormat: JWT
+      
   schemas:
     RegisterUser:
       type: object
@@ -511,7 +512,3 @@ components:
       properties:
         message:
           type: string
-
-
-
-

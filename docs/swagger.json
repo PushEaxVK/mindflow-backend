@@ -22,6 +22,11 @@
       "bearerAuth": []
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -825,4 +830,3 @@
     }
   }
 }
-
