@@ -25,6 +25,8 @@ router.post('/create', authenticate, createSingleArticle);
 
 router.patch('/:id', authenticate, updateArticleById);
 
+router.delete('/all', deleteAllArticles);
+
 router.delete('/:id', authenticate, deleteArticleById);
 
 router.post('/:id/save', authenticate, saveArticle);
@@ -38,7 +40,5 @@ router.get('/recommend', fetchRecommendedArticles);
 router.get('/:id', fetchArticleById);
 
 router.post('/', createManyArticles);
-
-router.delete('/all', deleteAllArticles);
 
 export default router;
