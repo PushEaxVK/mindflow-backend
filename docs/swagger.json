@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "Harmoniq Backend API",
-    "description": "API для керування статтями, авторизацією та збереженими статтями у проекті Harmoniq.\n",
+    "description": "API for managing articles, authentication, and saved articles in the Harmoniq project.\n",
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -25,17 +25,17 @@
   "tags": [
     {
       "name": "Auth",
-      "description": "Реєстрація та логін"
+      "description": "Registration and login"
     },
     {
       "name": "Articles",
-      "description": "Операції зі статтями"
+      "description": "Article operations"
     }
   ],
   "paths": {
     "/auth/register": {
       "post": {
-        "summary": "Реєстрація нового користувача",
+        "summary": "Register a new user",
         "operationId": "registerUser",
         "tags": [
           "Auth"
@@ -52,7 +52,7 @@
         },
         "responses": {
           "201": {
-            "description": "Користувач успішно зареєстрований",
+            "description": "User successfully registered",
             "content": {
               "application/json": {
                 "schema": {
@@ -62,7 +62,7 @@
             }
           },
           "400": {
-            "description": "Користувач вже існує",
+            "description": "User already exists",
             "content": {
               "application/json": {
                 "schema": {
@@ -72,7 +72,7 @@
             }
           },
           "422": {
-            "description": "Некоректні дані",
+            "description": "Invalid data",
             "content": {
               "application/json": {
                 "schema": {
@@ -86,7 +86,7 @@
     },
     "/auth/login": {
       "post": {
-        "summary": "Логін користувача (отримання JWT)",
+        "summary": "User login (JWT retrieval)",
         "operationId": "loginUser",
         "tags": [
           "Auth"
@@ -103,7 +103,7 @@
         },
         "responses": {
           "200": {
-            "description": "Логін успішний, повертає JWT токен",
+            "description": "Login successful, returns JWT token",
             "content": {
               "application/json": {
                 "schema": {
@@ -118,7 +118,7 @@
             }
           },
           "401": {
-            "description": "Невірні облікові дані",
+            "description": "Invalid credentials",
             "content": {
               "application/json": {
                 "schema": {
@@ -128,7 +128,7 @@
             }
           },
           "422": {
-            "description": "Некоректні дані",
+            "description": "Invalid data",
             "content": {
               "application/json": {
                 "schema": {
@@ -142,7 +142,7 @@
     },
     "/articles/create": {
       "post": {
-        "summary": "Створення нової статті (авторизація)",
+        "summary": "Create a new article (authorization required)",
         "operationId": "createArticle",
         "tags": [
           "Articles"
@@ -159,7 +159,7 @@
         },
         "responses": {
           "201": {
-            "description": "Стаття створена",
+            "description": "Article created",
             "content": {
               "application/json": {
                 "schema": {
@@ -169,7 +169,7 @@
             }
           },
           "400": {
-            "description": "Невалідні дані",
+            "description": "Invalid data",
             "content": {
               "application/json": {
                 "schema": {
@@ -179,7 +179,7 @@
             }
           },
           "401": {
-            "description": "Неавторизовано",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -193,7 +193,7 @@
     },
     "/articles": {
       "get": {
-        "summary": "Отримати список статей (з пагінацією, фільтрацією, сортуванням)",
+        "summary": "Get list of articles (with pagination, filtering, sorting)",
         "operationId": "getArticles",
         "tags": [
           "Articles"
@@ -206,7 +206,7 @@
               "type": "integer",
               "default": 1
             },
-            "description": "Номер сторінки"
+            "description": "Page number"
           },
           {
             "in": "query",
@@ -215,7 +215,7 @@
               "type": "integer",
               "default": 10
             },
-            "description": "Кількість статей на сторінку"
+            "description": "Number of articles per page"
           },
           {
             "in": "query",
@@ -224,7 +224,7 @@
               "type": "string",
               "example": "createdAt"
             },
-            "description": "Поле для сортування"
+            "description": "Field for sorting"
           },
           {
             "in": "query",
@@ -237,7 +237,7 @@
               ],
               "default": "desc"
             },
-            "description": "Порядок сортування"
+            "description": "Sorting order"
           },
           {
             "in": "query",
@@ -245,7 +245,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Список тегів через кому"
+            "description": "List of tags, comma-separated"
           },
           {
             "in": "query",
@@ -253,12 +253,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID автора"
+            "description": "Author ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Список статей з пагінацією",
+            "description": "List of articles with pagination",
             "content": {
               "application/json": {
                 "schema": {
@@ -285,7 +285,7 @@
             }
           },
           "400": {
-            "description": "Помилка запиту",
+            "description": "Bad request",
             "content": {
               "application/json": {
                 "schema": {
@@ -299,14 +299,14 @@
     },
     "/articles/popular": {
       "get": {
-        "summary": "Отримати популярні статті",
+        "summary": "Get popular articles",
         "operationId": "getPopularArticles",
         "tags": [
           "Articles"
         ],
         "responses": {
           "200": {
-            "description": "Популярні статті",
+            "description": "Popular articles",
             "content": {
               "application/json": {
                 "schema": {
@@ -319,7 +319,7 @@
             }
           },
           "404": {
-            "description": "Не знайдено жодної статті",
+            "description": "No articles found",
             "content": {
               "application/json": {
                 "schema": {
@@ -333,7 +333,7 @@
     },
     "/articles/{id}": {
       "get": {
-        "summary": "Отримати одну статтю по id",
+        "summary": "Get article by id",
         "operationId": "getArticleById",
         "tags": [
           "Articles"
@@ -346,12 +346,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID статті"
+            "description": "Article ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Стаття знайдена",
+            "description": "Article found",
             "content": {
               "application/json": {
                 "schema": {
@@ -361,7 +361,7 @@
             }
           },
           "404": {
-            "description": "Стаття не знайдена",
+            "description": "Article not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -373,7 +373,7 @@
         }
       },
       "patch": {
-        "summary": "Редагування статті (автор/адмін)",
+        "summary": "Edit article (author/admin)",
         "operationId": "updateArticle",
         "tags": [
           "Articles"
@@ -386,7 +386,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID статті"
+            "description": "Article ID"
           }
         ],
         "requestBody": {
@@ -401,7 +401,7 @@
         },
         "responses": {
           "200": {
-            "description": "Стаття оновлена",
+            "description": "Article updated",
             "content": {
               "application/json": {
                 "schema": {
@@ -411,7 +411,7 @@
             }
           },
           "401": {
-            "description": "Неавторизовано",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -421,7 +421,7 @@
             }
           },
           "403": {
-            "description": "Не автор або не адмін",
+            "description": "Not the author or not admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -431,7 +431,7 @@
             }
           },
           "404": {
-            "description": "Стаття не знайдена",
+            "description": "Article not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -443,7 +443,7 @@
         }
       },
       "delete": {
-        "summary": "Видалення статті (автор/адмін)",
+        "summary": "Delete article (author/admin)",
         "operationId": "deleteArticle",
         "tags": [
           "Articles"
@@ -456,12 +456,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID статті"
+            "description": "Article ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Стаття видалена",
+            "description": "Article deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -477,7 +477,7 @@
             }
           },
           "401": {
-            "description": "Неавторизовано",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -487,7 +487,7 @@
             }
           },
           "403": {
-            "description": "Не автор або не адмін",
+            "description": "Not the author or not admin",
             "content": {
               "application/json": {
                 "schema": {
@@ -497,7 +497,7 @@
             }
           },
           "404": {
-            "description": "Стаття не знайдена",
+            "description": "Article not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -511,7 +511,7 @@
     },
     "/articles/{id}/save": {
       "post": {
-        "summary": "Зберегти статтю для користувача",
+        "summary": "Save article for user",
         "operationId": "saveArticle",
         "tags": [
           "Articles"
@@ -524,12 +524,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID статті"
+            "description": "Article ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Стаття збережена",
+            "description": "Article saved",
             "content": {
               "application/json": {
                 "schema": {
@@ -545,7 +545,7 @@
             }
           },
           "400": {
-            "description": "Стаття вже у saved",
+            "description": "Article is already saved",
             "content": {
               "application/json": {
                 "schema": {
@@ -555,7 +555,7 @@
             }
           },
           "401": {
-            "description": "Неавторизовано",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -565,7 +565,7 @@
             }
           },
           "404": {
-            "description": "Стаття не знайдена",
+            "description": "Article not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -577,7 +577,7 @@
         }
       },
       "delete": {
-        "summary": "Видалити статтю із saved",
+        "summary": "Remove article from saved",
         "operationId": "removeSavedArticle",
         "tags": [
           "Articles"
@@ -590,12 +590,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID статті"
+            "description": "Article ID"
           }
         ],
         "responses": {
           "200": {
-            "description": "Стаття видалена із saved",
+            "description": "Article removed from saved",
             "content": {
               "application/json": {
                 "schema": {
@@ -611,7 +611,7 @@
             }
           },
           "400": {
-            "description": "Статті не було у saved",
+            "description": "Article was not in saved",
             "content": {
               "application/json": {
                 "schema": {
@@ -621,7 +621,7 @@
             }
           },
           "401": {
-            "description": "Неавторизовано",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -631,7 +631,7 @@
             }
           },
           "404": {
-            "description": "Стаття не знайдена",
+            "description": "Article not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -645,14 +645,14 @@
     },
     "/articles/saved": {
       "get": {
-        "summary": "Отримати збережені користувачем статті",
+        "summary": "Get user's saved articles",
         "operationId": "getSavedArticles",
         "tags": [
           "Articles"
         ],
         "responses": {
           "200": {
-            "description": "Список збережених статей",
+            "description": "List of saved articles",
             "content": {
               "application/json": {
                 "schema": {
@@ -665,7 +665,7 @@
             }
           },
           "401": {
-            "description": "Неавторизовано",
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -675,7 +675,7 @@
             }
           },
           "404": {
-            "description": "Не знайдено збережених статей",
+            "description": "No saved articles found",
             "content": {
               "application/json": {
                 "schema": {
@@ -758,11 +758,11 @@
         "properties": {
           "title": {
             "type": "string",
-            "example": "Нова стаття"
+            "example": "New article"
           },
           "text": {
             "type": "string",
-            "example": "Тут текст статті..."
+            "example": "Article text goes here..."
           },
           "tags": {
             "type": "array",
@@ -770,8 +770,8 @@
               "type": "string"
             },
             "example": [
-              "здоровʼя",
-              "баланс"
+              "health",
+              "balance"
             ]
           },
           "image": {
@@ -825,3 +825,4 @@
     }
   }
 }
+
