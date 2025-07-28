@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { validateBody } from '../middlewares/validateBody.js';
-import { registerUserSchema, loginUserSchema, refreshSessionSchema } from '../validation/auth.js';
+import {
+  registerUserSchema,
+  loginUserSchema,
+  refreshSessionSchema,
+} from '../validation/auth.js';
 import {
   registerUserController,
   loginUserController,
@@ -17,11 +21,11 @@ router.post(
   registerUserController,
 );
 
-authRouter.post('/login', validateBody(loginUserSchema), loginUserController);
+router.post('/login', validateBody(loginUserSchema), loginUserController);
 
-authRouter.post('/logout', authenticate, logoutUserController);
+router.post('/logout', authenticate, logoutUserController);
 
-authRouter.post(
+router.post(
   '/refresh',
   validateBody(refreshSessionSchema),
   refreshSessionController,

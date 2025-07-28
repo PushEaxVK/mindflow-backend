@@ -18,7 +18,7 @@ const REFRESH_TOKEN_EXPIRES_IN = '7d';
 const ACCESS_TOKEN_EXPIRES_IN_MS = 15 * 60 * 1000;
 const REFRESH_TOKEN_EXPIRES_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
-const createSession = (userId) => {
+export const createSession = (userId) => {
   const accessToken = jwt.sign(
     { userId, _id: userId },
     process.env.JWT_SECRET,
@@ -35,7 +35,7 @@ const createSession = (userId) => {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-    refreshTokenValidUntil: new Date(Date.now() + THERTY_DAYS),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   };
 };
 
