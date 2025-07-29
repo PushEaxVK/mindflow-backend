@@ -10,8 +10,11 @@ import { ENV_VARS } from './constants/envVars.js';
 import { UPLOAD_DIR } from './constants/paths.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
+<<<<<<< HEAD
 // import authRouter from './routers/auth.routes.js'; // Commented due to a conflict. Up to Team Lead to decide the naming approach.
 import authRouter from './routers/auth.js';
+=======
+>>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
 const PORT = Number(getEnvVar(ENV_VARS.PORT, '3000'));
 
 export const setupServer = () => {
@@ -42,8 +45,6 @@ export const setupServer = () => {
 
   app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api-docs', swaggerDocs());
-
-  app.use('/auth', authRouter);
 
   app.use(router);
   app.use(notFoundHandler);
