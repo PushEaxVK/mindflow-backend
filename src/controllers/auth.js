@@ -7,10 +7,13 @@ import {
 } from '../services/auth.js';
 
 import { THIRTY_DAYS } from '../constants/index.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+
+const NODE_ENV = getEnvVar('NODE_ENV', 'dev');
 
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+  secure: NODE_ENV === 'production',
   sameSite: 'Strict',
   expires: new Date(Date.now() + THIRTY_DAYS),
 };

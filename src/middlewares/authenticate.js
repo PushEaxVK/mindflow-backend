@@ -2,6 +2,9 @@ import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import User from '../db/models/users.js';
 import { SessionsCollection } from '../db/models/sessions.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+
+const JWT_SECRET = getEnvVar('JWT_SECRET');
 
 export const authenticate = async (req, res, next) => {
   const sessionId = req.cookies.sessionId;
@@ -24,7 +27,7 @@ export const authenticate = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
 
     const user = await User.findById(decoded._id || decoded.userId);
 
