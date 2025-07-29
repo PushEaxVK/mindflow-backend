@@ -12,7 +12,7 @@ import {
 } from '../controllers/auth.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
-import validateBody from '../middlewares/validateBody';
+import { validateBody } from '../middlewares/validateBody.js';
 
 const router = Router();
 

@@ -1,30 +1,13 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../db/models/users.js';
-<<<<<<< HEAD
-=======
 import createHttpError from 'http-errors';
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
 import { SessionsCollection } from '../db/models/sessions.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { ENV_VARS } from '../constants/envVars.js';
 import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
 import { isTokenExpired } from '../utils/isTokenExpired.js';
 
-<<<<<<< HEAD
-const createSession = (userId) => {
-  const accessToken = jwt.sign(
-    { userId, _id: userId },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m' },
-  );
-
-  const refreshToken = jwt.sign(
-    { userId, _id: userId },
-    process.env.JWT_REFRESH_SECRET,
-    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d' },
-  );
-=======
 const JWT_SECRET = getEnvVar(ENV_VARS.JWT_SECRET);
 // const JWT_ACCESS_SECRET = getEnvVar(ENV_VARS.JWT_ACCESS_SECRET);
 const JWT_REFRESH_SECRET = getEnvVar(ENV_VARS.JWT_REFRESH_SECRET);
@@ -52,20 +35,11 @@ const generateRefreshToken = (userId) => {
 export const createSessionData = (userId) => {
   const accessToken = generateAccessToken(userId);
   const refreshToken = generateRefreshToken(userId);
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
 
   return {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
-<<<<<<< HEAD
-    refreshTokenValidUntil: new Date(Date.now() + THERTY_DAYS),
-  };
-};
-
-export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
-=======
     refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   };
 };
@@ -87,7 +61,6 @@ export const loginUser = async (payload) => {
   const password = payload.password;
   if (!email || !password)
     throw createHttpError(400, 'Email and password are required');
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
 
   const user = await User.findOne({ email });
 
@@ -100,16 +73,6 @@ export const loginUser = async (payload) => {
   await SessionsCollection.findOneAndDelete({ userId: user._id });
   const sessionData = await createUserSession(user._id);
 
-<<<<<<< HEAD
-  const sessionData = createSession(user._id);
-
-  await SessionsCollection.create({
-    ...sessionData,
-    userId: user._id,
-  });
-
-=======
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
   return {
     ...sessionData,
     user: {
@@ -122,12 +85,6 @@ export const loginUser = async (payload) => {
   };
 };
 
-<<<<<<< HEAD
-export const logoutUser = async (accessToken) => {
-  try {
-    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-
-=======
 export const registerUser = async ({ name, email, password }) => {
   name = name?.trim();
   email = email?.trim().toLowerCase();
@@ -180,7 +137,6 @@ export const logoutUser = async (accessToken) => {
   try {
     const decoded = jwt.verify(accessToken, JWT_SECRET);
 
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
     await SessionsCollection.findOneAndDelete({
       userId: decoded.userId || decoded._id,
     });
@@ -192,11 +148,7 @@ export const logoutUser = async (accessToken) => {
 
 export const refreshSession = async (refreshToken) => {
   try {
-<<<<<<< HEAD
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-=======
     const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
 
     const session = await SessionsCollection.findOne({
       userId: decoded.userId || decoded._id,
@@ -207,11 +159,7 @@ export const refreshSession = async (refreshToken) => {
       throw createHttpError(401, 'Session not found!');
     }
 
-<<<<<<< HEAD
-    if (session.refreshTokenValidUntil < new Date()) {
-=======
     if (isTokenExpired(decoded.exp)) {
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
       await SessionsCollection.findByIdAndDelete(session._id);
       throw createHttpError(401, 'Session expired!');
     }
@@ -223,16 +171,7 @@ export const refreshSession = async (refreshToken) => {
 
     await SessionsCollection.findByIdAndDelete(session._id);
 
-<<<<<<< HEAD
-    const newSessionData = createSession(user._id);
-
-    await SessionsCollection.create({
-      ...newSessionData,
-      userId: user._id,
-    });
-=======
     const newSessionData = await createUserSession(user._id);
->>>>>>> fa98813a9ff17d77ae3a108ebab21a9d7167af63
 
     return {
       ...newSessionData,
