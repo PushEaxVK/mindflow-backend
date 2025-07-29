@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import { ENV_VARS } from './constants/envVars.js';
 import { UPLOAD_DIR } from './constants/paths.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
+import uploadsRouter from './routers/uploadsRoute.js';
 
 
 import authRouter from './routers/auth.routes.js'; 
@@ -46,6 +47,9 @@ export const setupServer = () => {
 
   
   app.use('/auth', authRouter);
+
+    app.use('/photo', uploadsRouter);
+
 
   app.use(router);
   app.use(notFoundHandler);
