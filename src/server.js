@@ -22,7 +22,23 @@ export const setupServer = () => {
     }),
   );
 
-  app.use(cors());
+  const APP_DOMAIN = [
+    'http://localhost:5173',
+    'https://mindflow-frontend.onrender.com',
+  ];
+
+  app.use(
+    cors({
+      origin: (origin, allowOrDeny) => {
+        if (!origin || APP_DOMAIN.includes(origin)) {
+          allowOrDeny(null, true);
+        } else {
+          allowOrDeny(new Error('Not allowed by CORS'));
+        }
+      },
+      credentials: true,
+    }),
+  );
 
   app.use(cookieParser());
 
