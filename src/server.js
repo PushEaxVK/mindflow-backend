@@ -21,13 +21,14 @@ export const setupServer = () => {
       limit: '5mb',
     }),
   );
-  
+
   const APP_DOMAIN = [
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:5175',
     'http://localhost:3000',
     'https://mindflow-frontend.onrender.com',
+    'https://mindflow-frontend.vercel.app',
   ];
 
   const corsOptions = {
@@ -44,7 +45,7 @@ export const setupServer = () => {
   };
 
   app.use(cors(corsOptions));
-  
+
   app.use(cookieParser());
 
   app.use(
