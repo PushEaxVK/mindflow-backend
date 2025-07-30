@@ -27,12 +27,12 @@ const clearSession = (res) => {
   res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: NODE_ENV === 'production',
-    sameSite: 'Strict',
+    sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
   });
   res.clearCookie('sessionId', {
     httpOnly: true,
     secure: NODE_ENV === 'production',
-    sameSite: 'Strict',
+    sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
   });
 };
 
