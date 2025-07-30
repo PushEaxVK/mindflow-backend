@@ -23,6 +23,10 @@ const usersSchema = new Schema(
       minlength: 8,
       maxlength: 64,
     },
+    avatarUrl: {
+      type: String,
+      trim: true,
+    },
     savedArticles: [
       {
         type: Schema.Types.ObjectId,
@@ -49,3 +53,4 @@ usersSchema.methods.toJSON = function () {
 const User = model('User', usersSchema, 'users');
 
 export default User;
+
