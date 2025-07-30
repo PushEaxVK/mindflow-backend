@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { validateBody } from '../middlewares/validateBody.js';
 import {
   registerUserSchema,
   loginUserSchema,
@@ -12,6 +11,8 @@ import {
   refreshSessionController,
 } from '../controllers/auth.js';
 import { authenticate } from '../middlewares/authenticate.js';
+
+import { validateBody } from '../middlewares/validateBody.js';
 
 const router = Router();
 
