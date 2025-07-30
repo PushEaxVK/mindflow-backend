@@ -14,7 +14,7 @@ const NODE_ENV = getEnvVar('NODE_ENV', 'dev');
 const cookieOptions = {
   httpOnly: true,
   secure: NODE_ENV === 'production',
-  sameSite: 'Strict',
+  sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
   expires: new Date(Date.now() + THIRTY_DAYS),
 };
 
