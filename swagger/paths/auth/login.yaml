@@ -1,0 +1,48 @@
+# paths/auth/login.yaml
+post:
+  summary: User login (JWT retrieval)
+  operationId: loginUser
+  tags: [Auth]
+  description: Authenticate user with email and password to receive access token
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/LoginUser.yaml'
+        examples:
+          valid_login:
+            summary: Valid login credentials
+            value:
+              email: user@example.com
+              password: MyPass123!
+  responses:
+    '200':
+      description: Login successful, returns JWT token
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [status, message, data]
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Successfully logged in a user!
+              data:
+                type: object
+                required: [accessToken]
+                properties:
+                  accessToken:
+                    type: string
+                    description: JWT access token
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    '400':
+      $ref: '../../components/responses/400.yaml'
+    '401':
+      $ref: '../../components/responses/401-users.yaml'
+    '422':
+      $ref: '../../components/responses/400.yaml'

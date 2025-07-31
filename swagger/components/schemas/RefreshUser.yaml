@@ -1,0 +1,7 @@
+type: object
+required: [sessionId]
+properties:
+  sessionId:
+    type: string
+    description: Session identifier for token refresh
+    example: 507f1f77bcf86cd799439011
