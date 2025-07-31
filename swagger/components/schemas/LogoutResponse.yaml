@@ -1,0 +1,11 @@
+type: object
+required: [status, message]
+properties:
+  status:
+    type: integer
+    example: 204
+    description: HTTP status code for successful logout
+  message:
+    type: string
+    example: Successfully logged out!
+    description: Success message
