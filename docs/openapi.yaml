@@ -1,23 +1,660 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: MindFlow Backend API
+  title: Harmoniq Backend API
+  description: >
+    API for managing articles, authentication, and saved articles in the Harmoniq project.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: A RESTful backend service for a contact management web application. It provides secure user authentication (registration, login, token-based access) and full CRUD functionality for managing personal contact data. Built with scalability and security in mind, the API ensures that each user's data is isolated and protected.
-tags:
-  - name: Index
-    description: Check server.
+
 servers:
   - url: http://localhost:3000
-  - url: https://mindflow-backend-iwk7.onrender.com
+  - url: https://mindflow-backend-s1cw.onrender.com/api-docs
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Auth
+    description: Registration and login
+  - name: Articles
+    description: Article operations
+
 paths:
-  /:
+  /auth/register:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUser'
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      summary: User login (JWT retrieval)
+      operationId: loginUser
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: Login successful, returns JWT token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      summary: User logout
+      operationId: logoutUser
+      tags: [Auth]
+      description: Logout user and invalidate current session
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: User successfully logged out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      operationId: refreshSession
+      tags: [Auth]
+      description: Refresh user session and get new access token using session ID
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshUser'
+      responses:
+        '200':
+          description: Session successfully refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '401':
+          description: Unauthorized - Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/create:
+    post:
+      summary: Create a new article (authorization required)
+      operationId: createArticle
+      tags: [Articles]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArticle'
+      responses:
+        '201':
+          description: Article created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '400':
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles:
     get:
-      $ref: ../swagger/paths/index/get.yaml
+      summary: Get list of articles (with pagination, filtering, sorting)
+      operationId: getArticles
+      tags: [Articles]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of articles per page
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: createdAt
+          description: Field for sorting
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          description: Sorting order
+        - in: query
+          name: tags
+          schema:
+            type: string
+          description: List of tags, comma-separated
+        - in: query
+          name: author
+          schema:
+            type: string
+          description: Author ID
+      responses:
+        '200':
+          description: List of articles with pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Article'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/popular:
+    get:
+      summary: Get popular articles
+      operationId: getPopularArticles
+      tags: [Articles]
+      responses:
+        '200':
+          description: Popular articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        '404':
+          description: No articles found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/{id}:
+    get:
+      summary: Get article by id
+      operationId: getArticleById
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Article ID
+      responses:
+        '200':
+          description: Article found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: Edit article (author/admin)
+      operationId: updateArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Article ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateArticle'
+      responses:
+        '200':
+          description: Article updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Article'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Not the author or not admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete article (author/admin)
+      operationId: deleteArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Article ID
+      responses:
+        '200':
+          description: Article deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Article deleted successfully
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Not the author or not admin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/{id}/save:
+    post:
+      summary: Save article for user
+      operationId: saveArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Article ID
+      responses:
+        '200':
+          description: Article saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Article saved successfully
+        '400':
+          description: Article is already saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Remove article from saved
+      operationId: removeSavedArticle
+      tags: [Articles]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Article ID
+      responses:
+        '200':
+          description: Article removed from saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Article removed from saved
+        '400':
+          description: Article was not in saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Article not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/saved:
+    get:
+      summary: Get user's saved articles
+      operationId: getSavedArticles
+      tags: [Articles]
+      responses:
+        '200':
+          description: List of saved articles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No saved articles found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    RegisterUser:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          description: User's full name
+          example: Zoia Plus
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: user@example.com
+          maxLength: 64
+        password:
+          type: string
+          description: User's password (must contain letters, numbers, and special characters)
+          example: MyPass123!
+          minLength: 8
+          maxLength: 64
+          pattern: '^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$'
+
+    LoginUser:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: user@example.com
+          maxLength: 64
+        password:
+          type: string
+          description: User's password (must contain letters, numbers, and special characters)
+          example: MyPass123!
+          minLength: 8
+          maxLength: 64
+          pattern: '^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$'
+
+    RefreshUser:
+      type: object
+      required: [sessionId]
+      properties:
+        sessionId:
+          type: string
+          description: Session identifier for token refresh
+          example: 507f1f77bcf86cd799439011
+
+    LoginResponse:
+      type: object
+      required: [status, message, data]
+      properties:
+        status:
+          type: integer
+          example: 200
+          description: HTTP status code
+        message:
+          type: string
+          example: Successfully logged in a user!
+          description: Success message
+        data:
+          type: object
+          required: [accessToken]
+          properties:
+            accessToken:
+              type: string
+              description: JWT access token
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    LogoutResponse:
+      type: object
+      required: [status, message]
+      properties:
+        status:
+          type: integer
+          example: 204
+          description: HTTP status code for successful logout
+        message:
+          type: string
+          example: Successfully logged out!
+          description: Success message
+
+    RefreshResponse:
+      type: object
+      required: [status, message, data]
+      properties:
+        status:
+          type: integer
+          example: 200
+          description: HTTP status code
+        message:
+          type: string
+          example: Successfully refreshed a session!
+          description: Success message
+        data:
+          type: object
+          required: [accessToken]
+          properties:
+            accessToken:
+              type: string
+              description: New JWT access token
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    CreateArticle:
+      type: object
+      required: [title, text]
+      properties:
+        title:
+          type: string
+          example: New article
+        text:
+          type: string
+          example: Article text goes here...
+        tags:
+          type: array
+          items:
+            type: string
+          example: [health, balance]
+        image:
+          type: string
+          example: https://site.com/images/img.jpg
+
+    Article:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        text:
+          type: string
+        author:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        image:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

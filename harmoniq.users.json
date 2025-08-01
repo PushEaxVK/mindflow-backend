@@ -1,0 +1,891 @@
+[{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff2"
+  },
+  "email": "user1@example.com",
+"password": "1somepassword",
+"name":
+ "Анастасія Олійник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff2.webp",
+  "articlesAmount": 2
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff3"
+  },
+  "email": "user2@example.com",
+  "password": "2somepassword",
+"name":
+ "Назар Ткаченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff3.webp",
+  "articlesAmount": 9
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff4"
+  },
+  "email": "user3@example.com",
+  "password": "3somepassword",
+"name":
+ "Єва Бондаренко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff4.webp",
+  "articlesAmount": 6
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff5"
+  },
+  "email": "user4@example.com",
+  "password": "4somepassword",
+"name":
+ "Дмитро Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff5.webp",
+  "articlesAmount": 14
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff6"
+  },
+  "email": "user5@example.com",
+  "password": "5somepassword",
+"name":
+ "Олександра Бондаренко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff6.webp",
+  "articlesAmount": 10
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff7"
+  },
+  "email": "user6@example.com",
+  "password": "6somepassword",
+"name":
+ "Олександр Шевчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff7.webp",
+  "articlesAmount": 11
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff8"
+  },
+  "email": "user7@example.com",
+  "password": "7somepassword",
+"name":
+ "Софія Мельник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff8.webp",
+  "articlesAmount": 5
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcff9"
+  },
+  "email": "user8@example.com",
+  "password": "8somepassword",
+"name":
+ "Владислав Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcff9.webp",
+  "articlesAmount": 6
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcffa"
+  },
+  "email": "user9@example.com",
+  "password": "9somepassword",
+"name":
+ "Іван Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcffa.webp",
+  "articlesAmount": 8
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcffb"
+  },
+  "email": "user10@example.com",
+  "password": "10somepassword",
+"name":
+ "Дарина Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcffb.webp",
+  "articlesAmount": 13
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcffc"
+  },
+  "email": "user11@example.com",
+  "password": "11somepassword",
+"name":
+ "Поліна Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcffc.webp",
+  "articlesAmount": 9
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcffd"
+  },
+  "email": "user12@example.com",
+  "password": "12somepassword",
+"name":
+ "Софія Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcffd.webp",
+  "articlesAmount": 2
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcffe"
+  },
+  "email": "user13@example.com",
+  "password": "13somepassword",
+"name":
+ "Владислав Гриценко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcffe.webp",
+  "articlesAmount": 13
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fcfff"
+  },
+  "email": "user14@example.com",
+  "password": "14somepassword",
+"name":
+ "Дарина Шевченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fcfff.webp",
+  "articlesAmount": 13
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd000"
+  },
+  "email": "user15@example.com",
+  "password": "15somepassword",
+"name":
+ "Катерина Лисенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd000.webp",
+  "articlesAmount": 3
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd001"
+  },
+  "email": "user16@example.com",
+  "password": "16somepassword",
+"name":
+ "Максим Гриценко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd001.webp",
+  "articlesAmount": 8
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd002"
+  },
+  "email": "user17@example.com",
+  "password": "17somepassword",
+"name":
+ "Олександра Ткаченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd002.webp",
+  "articlesAmount": 12
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd003"
+  },
+  "email": "user18@example.com",
+  "password": "18somepassword",
+"name":
+ "Дарина Лисенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd003.webp",
+  "articlesAmount": 10
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd004"
+  },
+  "email": "user19@example.com",
+  "password": "19somepassword",
+"name":
+ "Єва Шевченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd004.webp",
+  "articlesAmount": 8
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd005"
+  },
+  "email": "user20@example.com",
+  "password": "20somepassword",
+"name":
+ "Катерина Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd005.webp",
+  "articlesAmount": 11
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd006"
+  },
+  "email": "user21@example.com",
+  "password": "21somepassword",
+"name":
+ "Олександр Мельник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd006.webp",
+  "articlesAmount": 13
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd007"
+  },
+  "email": "user22@example.com",
+  "password": "22somepassword",
+"name":
+ "Єва Коваленко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd007.webp",
+  "articlesAmount": 11
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd008"
+  },
+  "email": "user23@example.com",
+  "password": "23somepassword",
+"name":
+ "Максим Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd008.webp",
+  "articlesAmount": 10
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd009"
+  },
+  "email": "user24@example.com",
+  "password": "24somepassword",
+"name":
+ "Єва Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd009.webp",
+  "articlesAmount": 11
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd00a"
+  },
+  "email": "user25@example.com",
+  "password": "25somepassword",
+"name":
+ "Андрій Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd00a.webp",
+  "articlesAmount": 15
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd00b"
+  },
+  "email": "user26@example.com",
+  "password": "26somepassword",
+"name":
+ "Дмитро Ткачук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd00b.webp",
+  "articlesAmount": 11
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd00c"
+  },
+  "email": "user27@example.com",
+  "password": "27somepassword",
+"name":
+ "Злата Олійник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd00c.webp",
+  "articlesAmount": 7
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd00d"
+  },
+  "email": "user28@example.com",
+  "password": "28somepassword",
+"name":
+ "Олександр Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd00d.webp",
+  "articlesAmount": 10
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd00e"
+  },
+  "email": "user29@example.com",
+  "password": "29somepassword",
+"name":
+ "Дмитро Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd00e.webp",
+  "articlesAmount": 5
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd00f"
+  },
+  "email": "user30@example.com",
+  "password": "30somepassword",
+"name":
+ "Дарина Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd00f.webp",
+  "articlesAmount": 6
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd010"
+  },
+  "email": "user31@example.com",
+  "password": "31somepassword",
+"name":
+ "Назар Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd010.webp",
+  "articlesAmount": 9
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd011"
+  },
+  "email": "user32@example.com",
+  "password": "32somepassword",
+"name":
+ "Богдан Коваль",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd011.webp",
+  "articlesAmount": 19
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd012"
+  },
+  "email": "user33@example.com",
+  "password": "33somepassword",
+"name":
+ "Матвій Мельник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd012.webp",
+  "articlesAmount": 10
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd013"
+  },
+  "email": "user34@example.com",
+  "password": "34somepassword",
+"name":
+ "Поліна Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd013.webp",
+  "articlesAmount": 16
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd014"
+  },
+  "email": "user35@example.com",
+  "password": "35somepassword",
+"name":
+ "Андрій Коваленко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd014.webp",
+  "articlesAmount": 6
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd015"
+  },
+  "email": "user36@example.com",
+  "password": "36somepassword",
+"name":
+ "Максим Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd015.webp",
+  "articlesAmount": 14
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd016"
+  },
+  "email": "user37@example.com",
+  "password": "37somepassword",
+"name":
+ "Анастасія Бойко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd016.webp",
+  "articlesAmount": 11
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd017"
+  },
+  "email": "user38@example.com",
+  "password": "38somepassword",
+"name":
+ "Матвій Савченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd017.webp",
+  "articlesAmount": 6
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd018"
+  },
+  "email": "user39@example.com",
+  "password": "39somepassword",
+"name":
+ "Поліна Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd018.webp",
+  "articlesAmount": 10
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd019"
+  },
+  "email": "user40@example.com",
+  "password": "40somepassword",
+"name":
+ "Анна Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd019.webp",
+  "articlesAmount": 12
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd01a"
+  },
+  "email": "user41@example.com",
+  "password": "41somepassword",
+"name":
+ "Матвій Петренко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd01a.webp",
+  "articlesAmount": 15
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd01b"
+  },
+  "email": "user42@example.com",
+  "password": "42somepassword",
+"name":
+ "Владислав Клименко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd01b.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd01c"
+  },
+  "email": "user43@example.com",
+  "password": "43somepassword",
+"name":
+ "Олександр Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd01c.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd01d"
+  },
+  "email": "user44@example.com",
+  "password": "44somepassword",
+"name":
+ "Анастасія Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd01d.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd01e"
+  },
+  "email": "user45@example.com",
+  "password": "45somepassword",
+"name":
+ "Матвій Коваль",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd01e.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd01f"
+  },
+  "email": "user46@example.com",
+  "password": "46somepassword",
+"name":
+ "Олександр Шевченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd01f.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd020"
+  },
+  "email": "user47@example.com",
+  "password": "47somepassword",
+"name":
+ "Дмитро Лисенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd020.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd021"
+  },
+  "email": "user48@example.com",
+  "password": "48somepassword",
+"name":
+ "Анна Ткачук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd021.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd022"
+  },
+  "email": "user49@example.com",
+  "password": "49somepassword",
+"name":
+ "Софія Шевченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd022.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd023"
+  },
+  "email": "user50@example.com",
+  "password": "50somepassword",
+"name":
+ "Анна Лисенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd023.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd024"
+  },
+  "email": "user51@example.com",
+  "password": "51somepassword",
+"name":
+ "Анастасія Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd024.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd025"
+  },
+  "email": "user52@example.com",
+  "password": "52somepassword",
+"name":
+ "Вікторія Гриценко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd025.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd026"
+  },
+  "email": "user53@example.com",
+  "password": "53somepassword",
+"name":
+ "Вікторія Ковальа",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd026.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd027"
+  },
+  "email": "user54@example.com",
+  "password": "54somepassword",
+"name":
+ "Дмитро Шевчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd027.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd028"
+  },
+  "email": "user55@example.com",
+  "password": "55somepassword",
+"name":
+ "Катерина Петренко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd028.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd029"
+  },
+  "email": "user56@example.com",
+  "password": "56somepassword",
+"name":
+ "Олександр Савченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd029.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd02a"
+  },
+  "email": "user57@example.com",
+  "password": "57somepassword",
+"name":
+ "Владислав Олійник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd02a.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd02b"
+  },
+  "email": "user58@example.com",
+  "password": "58somepassword",
+"name":
+ "Андрій Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd02b.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd02c"
+  },
+  "email": "user59@example.com",
+  "password": "59somepassword",
+"name":
+ "Олександр Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd02c.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd02d"
+  },
+  "email": "user60@example.com",
+  "password": "60somepassword",
+"name":
+ "Олександра Кравченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd02d.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd02e"
+  },
+  "email": "user61@example.com",
+  "password": "61somepassword",
+"name":
+ "Матвій Романенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd02e.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd02f"
+  },
+  "email": "user62@example.com",
+  "password": "62somepassword",
+"name":
+ "Вікторія Шевчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd02f.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd030"
+  },
+  "email": "user63@example.com",
+  "password": "63somepassword",
+"name":
+ "Матвій Ткачук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd030.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd031"
+  },
+  "email": "user64@example.com",
+  "password": "64somepassword",
+"name":
+ "Злата Лисенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd031.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd032"
+  },
+  "email": "user65@example.com",
+  "password": "65somepassword",
+"name":
+ "Анастасія Бойко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd032.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd033"
+  },
+  "email": "user66@example.com",
+  "password": "66somepassword",
+"name":
+ "Єва Поліщук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd033.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd034"
+  },
+  "email": "user67@example.com",
+  "password": "67somepassword",
+"name":
+ "Анна Олійник",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd034.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd035"
+  },
+  "email": "user68@example.com",
+  "password": "68somepassword",
+"name":
+ "Андрій Лисенко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd035.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd036"
+  },
+  "email": "user69@example.com",
+  "password": "69somepassword",
+"name":
+ "Артем Коваленко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd036.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd037"
+  },
+  "email": "user70@example.com",
+  "password": "70somepassword",
+"name":
+ "Софія Ткаченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd037.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd038"
+  },
+  "email": "user71@example.com",
+  "password": "71somepassword",
+"name":
+ "Олександра Петренко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd038.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd039"
+  },
+  "email": "user72@example.com",
+  "password": "72somepassword",
+"name":
+ "Анна Петренко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd039.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd03a"
+  },
+  "email": "user73@example.com",
+  "password": "73somepassword",
+"name":
+ "Іван Савченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd03a.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd03b"
+  },
+  "email": "user74@example.com",
+  "password": "74somepassword",
+"name":
+ "Дмитро Іваненко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd03b.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd03c"
+  },
+  "email": "user75@example.com",
+  "password": "75somepassword",
+"name":
+ "Єва Ткаченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd03c.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd03d"
+  },
+  "email": "user76@example.com",
+  "password": "76somepassword",
+"name":
+ "Анна Савченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd03d.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd03e"
+  },
+  "email": "user77@example.com",
+  "password": "77somepassword",
+"name":
+ "Єва Ткачук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd03e.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd03f"
+  },
+  "email": "user78@example.com",
+  "password": "78somepassword",
+"name":
+ "Богдан Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd03f.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd040"
+  },
+  "email": "user79@example.com",
+  "password": "79somepassword",
+"name":
+ "Артем Шевченко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd040.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd041"
+  },
+  "email": "user80@example.com",
+  "password": "80somepassword",
+"name":
+ "Богдан Ковальчук",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd041.webp",
+  "articlesAmount": 0
+},
+{
+  "_id": {
+    "$oid": "6881563901add19ee16fd042"
+  },
+  "email": "user81@example.com",
+  "password": "81somepassword",
+"name":
+ "Поліна Гриценко",
+  "avatarUrl": "https://ftp.goit.study/img/harmoniq/users/6881563901add19ee16fd042.webp",
+  "articlesAmount": 0
+}]

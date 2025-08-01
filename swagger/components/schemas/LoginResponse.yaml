@@ -1,0 +1,19 @@
+type: object
+required: [status, message, data]
+properties:
+  status:
+    type: integer
+    example: 200
+    description: HTTP status code
+  message:
+    type: string
+    example: Successfully logged in a user!
+    description: Success message
+  data:
+    type: object
+    required: [accessToken]
+    properties:
+      accessToken:
+        type: string
+        description: JWT access token
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...

@@ -1,53 +1,160 @@
-import { loginUser, logoutUser, refreshSession } from '../services/auth.js';
+import {
+  loginUser,
+  logoutUser,
+  refreshSession,
+  registerUser,
+  createUserSession,
+} from '../services/auth.js';
 
-const setupSessionCookies = (session, res) => {
-  res.cookie('sessionId', session.id, {
+import { THIRTY_DAYS } from '../constants/index.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+
+const NODE_ENV = getEnvVar('NODE_ENV', 'dev');
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: NODE_ENV === 'production',
+  sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
+  expires: new Date(Date.now() + THIRTY_DAYS),
+};
+
+const setupSession = (res, session) => {
+  res.cookie('refreshToken', session.refreshToken, cookieOptions);
+  res.cookie('sessionId', session._id.toString(), cookieOptions);
+};
+
+const clearSession = (res) => {
+  res.clearCookie('refreshToken', {
     httpOnly: true,
-    expires: session.refreshTokenValidUntil,
+    secure: NODE_ENV === 'production',
+    sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
   });
-  res.cookie('sessionToken', session.refreshToken, {
+  res.clearCookie('sessionId', {
     httpOnly: true,
-    expires: session.refreshTokenValidUntil,
+    secure: NODE_ENV === 'production',
+    sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
   });
 };
 
 export const loginUserController = async (req, res) => {
-  const session = await loginUser(req.body);
+  try {
+    const session = await loginUser(req.body);
+    setupSession(res, session);
 
-  setupSessionCookies(session, res);
+    res.json({
+      status: 200,
+      message: 'Successfully logged in a user!',
+      data: {
+        accessToken: session.accessToken,
+        user: session.user,
+      },
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    const statusCode = error.status || 401;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: error.message || 'Login failed',
+      data: null,
+    });
+  }
+};
 
-  res.json({
-    status: 200,
-    message: 'Successfully logged in a user!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
+export const registerUserController = async (req, res) => {
+  try {
+    const user = await registerUser(req.body);
+    const session = await createUserSession(user._id);
+    setupSession(res, session);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully registered user!',
+      data: {
+        user,
+        accessToken: session.accessToken,
+      },
+    });
+  } catch (error) {
+    console.error('Register error:', error.message);
+    const statusCode = error.status || 400;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: error.message || 'Registration failed',
+      data: null,
+    });
+  }
 };
 
 export const logoutUserController = async (req, res) => {
-  const { sessionToken, sessionId } = req.cookies;
+  try {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
 
-  await logoutUser(sessionId, sessionToken);
+    if (!token) {
+      return res.status(401).json({
+        status: 401,
+        message: 'Access token required',
+        data: {
+          message: 'No access token provided',
+        },
+      });
+    }
 
-  res.clearCookie('sessionToken');
-  res.clearCookie('sessionId');
+    await logoutUser(token);
+    clearSession(res);
 
-  res.status(204).send();
+    res.json({
+      status: 200,
+      message: 'Successfully logged out!',
+      data: {
+        message: 'User logged out successfully',
+      },
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+    const statusCode = error.status || 500;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: error.message || 'Logout failed',
+      data: null,
+    });
+  }
 };
 
 export const refreshSessionController = async (req, res) => {
-  const { sessionToken, sessionId } = req.cookies;
+  try {
+    const { refreshToken } = req.cookies;
 
-  const session = await refreshSession(sessionId, sessionToken);
+    if (!refreshToken) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Refresh token required',
+        data: {
+          message: 'No refresh token provided in cookies',
+        },
+      });
+    }
 
-  setupSessionCookies(session, res);
+    const session = await refreshSession(refreshToken);
+    setupSession(res, session);
 
-  res.json({
-    status: 200,
-    message: 'Successfully refreshed a session!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
+    res.json({
+      status: 200,
+      message: 'Successfully refreshed a session!',
+      data: {
+        accessToken: session.accessToken,
+        user: session.user,
+      },
+    });
+  } catch (error) {
+    console.error('Refresh session error:', error);
+    clearSession(res);
+
+    const statusCode = error.status || 401;
+    res.status(statusCode).json({
+      status: statusCode,
+      message: error.message || 'Failed to refresh session',
+      data: null,
+    });
+  }
 };
