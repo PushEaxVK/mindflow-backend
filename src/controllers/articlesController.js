@@ -92,6 +92,10 @@ export const deleteAllArticles = async (req, res, next) => {
   }
 };
 
+// ❌ Вимкнено: createSingleArticle
+// Замість цього використовується createArticleFromForm з підтримкою файлів
+
+/*
 export const createSingleArticle = async (req, res, next) => {
   try {
     const newArticle = await Article.create({
@@ -103,6 +107,7 @@ export const createSingleArticle = async (req, res, next) => {
     next(err);
   }
 };
+*/
 
 export const fetchSavedArticles = async (req, res, next) => {
   try {
