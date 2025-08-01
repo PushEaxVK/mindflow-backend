@@ -6,9 +6,7 @@ import {
   createManyArticles,
   deleteAllArticles,
   fetchAllArticles,
-  createSingleArticle,
   fetchSavedArticles,
-  updateArticleById,
   deleteArticleById,
   saveArticle,
   removeSavedArticle,
@@ -32,8 +30,6 @@ const upload = multer({
   },
 });
 
-
-
 router.get('/', fetchAllArticles);
 
 router.get('/popular', fetchPopularArticles);
@@ -41,11 +37,10 @@ router.get('/popular', fetchPopularArticles);
 // 🆕 ОНОВЛЕНО: створення статті тепер через multipart/form-data + авторизація
 router.post(
   '/create',
-    authenticate,
+  authenticate,
   upload.single('image'),
-  createArticleFromForm
+  createArticleFromForm,
 );
-
 
 router.delete('/all', deleteAllArticles);
 
@@ -57,11 +52,9 @@ router.delete('/:id/save', authenticate, removeSavedArticle);
 
 router.get('/saved', authenticate, fetchSavedArticles);
 
-
 router.get('/recommend', fetchRecommendedArticles);
 
 router.get('/:id', fetchArticleById);
-
 
 router.post('/', createManyArticles);
 
