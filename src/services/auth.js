@@ -176,9 +176,18 @@ export const refreshSession = async (refreshToken) => {
     return {
       ...newSessionData,
       user: {
+        // _id: user._id,
+        // name: user.name,
+        // email: user.email,
+        // createdAt: user.createdAt,
+        // updatedAt: user.updatedAt,
         _id: user._id,
         name: user.name,
         email: user.email,
+        avatarUrl: user.avatarUrl || null,
+        savedArticles: user.savedArticles || [],
+        articlesAmount: user.articlesAmount || 0,
+        role: user.role || 'user',
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       },
