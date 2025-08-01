@@ -1,5 +1,5 @@
 import Article from '../db/models/articleModel.js';
-import User from '../db/models/users.js'; 
+import User from '../db/models/users.js';
 
 export const getArticleById = async (id) => {
   return await Article.findById(id).populate('author', 'name');
@@ -18,11 +18,9 @@ export const getSavedArticles = async (userId) => {
   return user?.savedArticles || [];
 };
 
-
 export const getPopularArticles = async (limit = 10) => {
   return await Article.find().sort({ views: -1 }).limit(limit);
 };
-
 
 export const getPaginatedArticles = async ({
   page = 1,
@@ -44,10 +42,7 @@ export const getPaginatedArticles = async ({
   const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
 
   const [articles, total] = await Promise.all([
-    Article.find(query)
-      .sort(sortObj)
-      .skip(Number(skip))
-      .limit(Number(limit)),
+    Article.find(query).sort(sortObj).skip(Number(skip)).limit(Number(limit)),
     Article.countDocuments(query),
   ]);
 
@@ -58,9 +53,3 @@ export const getPaginatedArticles = async ({
     pages: Math.ceil(total / limit),
   };
 };
-
-
-
-
-
-
