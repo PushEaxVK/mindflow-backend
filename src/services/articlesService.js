@@ -1,16 +1,16 @@
 import Article from '../db/models/articleModel.js';
 import User from '../db/models/users.js';
 
+export const getAllArticles = async () => {
+  return await Article.find();
+};
+
 export const getArticleById = async (id) => {
-  return await Article.findById(id).populate('author', 'name');
+  return await Article.findById(id).populate('ownerId', 'name');
 };
 
 export const getRecommendedArticles = async (tags = []) => {
   return await Article.find({ tags: { $in: tags } }).limit(5);
-};
-
-export const getAllArticles = async () => {
-  return await Article.find();
 };
 
 export const getSavedArticles = async (userId) => {
@@ -43,7 +43,7 @@ export const getPaginatedArticles = async ({
 
   const [articles, total] = await Promise.all([
     Article.find(query)
-      .populate('author', 'name')
+      .populate('ownerId', 'name')
       .sort(sortObj)
       .skip(Number(skip))
       .limit(Number(limit)),
@@ -56,4 +56,17 @@ export const getPaginatedArticles = async ({
     page: Number(page),
     pages: Math.ceil(total / limit),
   };
+};
+
+export const createArticleService = async (payload) => {
+  const article = await Article.create(payload);
+  return article;
+};
+
+export const updateArticleService = async (id, updateData) => {
+  const updated = await Article.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+  return updated;
 };
