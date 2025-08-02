@@ -7,6 +7,7 @@ import {
   getUserSavedArticlesController,
   saveArticleToUserController,
   deleteArticleFromUserController,
+  getPopularUsersController,
 } from '../controllers/usersController.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { authenticate } from '../middlewares/authenticate.js';
@@ -15,6 +16,8 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 const usersRouter = Router();
 
 usersRouter.get('/', ctrlWrapper(getAllUsersController));
+
+usersRouter.get('/popular', ctrlWrapper(getPopularUsersController));
 
 usersRouter.get('/:userId', isValidId, ctrlWrapper(getUserByIdController));
 
