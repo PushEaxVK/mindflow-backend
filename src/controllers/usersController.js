@@ -139,15 +139,20 @@ export const deleteArticleFromUserController = async (req, res, next) => {
 
 export const getPopularUsersController = async (req, res, next) => {
   try {
-    const limit = Number(req.query.limit) || 5;
-    const parsedLimit = parseInt(limit);
+    const { page, perPage } = parsePaginationParams(req.query);
 
-    const users = await getPopularUsersService(parsedLimit);
+    const { users, pagination } = await getPopularUsersService({
+      page,
+      perPage,
+    });
 
     res.status(200).json({
       status: 200,
       message: 'Popular users fetched successfully',
-      data: { users },
+      data: {
+        users,
+        pagination,
+      },
     });
   } catch (error) {
     next(error);
