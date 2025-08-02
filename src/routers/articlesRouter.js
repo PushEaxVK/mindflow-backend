@@ -1,5 +1,4 @@
 import express from 'express';
-import multer from 'multer';
 import {
   fetchArticleById,
   fetchRecommendedArticles,
@@ -11,40 +10,46 @@ import {
   saveArticle,
   removeSavedArticle,
   fetchPopularArticles,
+  updateArticleController,
+  createArticleController,
 } from '../controllers/articlesController.js';
-import { createArticleFromForm } from '../controllers/articleCreateController.js'; // 🆕 Імпорт нового контролера
+
 import { authenticate } from '../middlewares/authenticate.js';
+import {
+  articleSchema,
+  updateArticleSchema,
+} from '../validation/articlesValidation.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { upload } from '../middlewares/multer.js';
+import ctrlWrapper from '../utils/ctrlWrapper.js';
 
 const router = express.Router();
 
-// Налаштування multer для обробки файлів (одне зображення)
-const upload = multer({
-  limits: {
-    fileSize: 1024 * 1024, // 1MB
-  },
-  fileFilter(req, file, cb) {
-    if (!file.mimetype.startsWith('image/')) {
-      return cb(new Error('Тільки зображення дозволені'));
-    }
-    cb(null, true);
-  },
-});
-
 router.get('/', fetchAllArticles);
 
-router.get('/popular', fetchPopularArticles);
+router.get('/:id', fetchArticleById);
 
-// 🆕 ОНОВЛЕНО: створення статті тепер через multipart/form-data + авторизація
+router.delete('/:id', authenticate, deleteArticleById);
+
 router.post(
   '/create',
   authenticate,
-  upload.single('image'),
-  createArticleFromForm,
+  upload.single('img'),
+  validateBody(articleSchema),
+  ctrlWrapper(createArticleController),
 );
 
-router.delete('/all', deleteAllArticles);
+router.patch(
+  '/:id',
+  authenticate,
+  upload.single('img'),
+  validateBody(updateArticleSchema),
+  ctrlWrapper(updateArticleController),
+);
 
-router.delete('/:id', authenticate, deleteArticleById);
+router.get('/popular', fetchPopularArticles);
+
+router.delete('/all', deleteAllArticles);
 
 router.post('/:id/save', authenticate, saveArticle);
 
@@ -53,8 +58,6 @@ router.delete('/:id/save', authenticate, removeSavedArticle);
 router.get('/saved', authenticate, fetchSavedArticles);
 
 router.get('/recommend', fetchRecommendedArticles);
-
-router.get('/:id', fetchArticleById);
 
 router.post('/', createManyArticles);
 
