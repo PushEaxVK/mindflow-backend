@@ -16,6 +16,7 @@ const cookieOptions = {
   secure: NODE_ENV === 'production',
   sameSite: NODE_ENV === 'production' ? 'None' : 'Lax',
   expires: new Date(Date.now() + THIRTY_DAYS),
+  domain: NODE_ENV === 'production' ? undefined : 'localhost',
 };
 
 const setupSession = (res, session) => {
@@ -49,12 +50,11 @@ export const loginUserController = async (req, res) => {
         user: session.user,
       },
     });
-  } catch (error) {
-    console.error('Login error:', error);
-    const statusCode = error.status || 401;
+  } catch (err) {
+    const statusCode = err.status || 401;
     res.status(statusCode).json({
       status: statusCode,
-      message: error.message || 'Login failed',
+      message: err.message || 'Login failed',
       data: null,
     });
   }
@@ -74,12 +74,11 @@ export const registerUserController = async (req, res) => {
         accessToken: session.accessToken,
       },
     });
-  } catch (error) {
-    console.error('Register error:', error.message);
-    const statusCode = error.status || 400;
+  } catch (err) {
+    const statusCode = err.status || 400;
     res.status(statusCode).json({
       status: statusCode,
-      message: error.message || 'Registration failed',
+      message: err.message || 'Registration failed',
       data: null,
     });
   }
@@ -110,12 +109,11 @@ export const logoutUserController = async (req, res) => {
         message: 'User logged out successfully',
       },
     });
-  } catch (error) {
-    console.error('Logout error:', error);
-    const statusCode = error.status || 500;
+  } catch (err) {
+    const statusCode = err.status || 500;
     res.status(statusCode).json({
       status: statusCode,
-      message: error.message || 'Logout failed',
+      message: err.message || 'Logout failed',
       data: null,
     });
   }
@@ -146,14 +144,13 @@ export const refreshSessionController = async (req, res) => {
         user: session.user,
       },
     });
-  } catch (error) {
-    console.error('Refresh session error:', error);
+  } catch (err) {
     clearSession(res);
 
-    const statusCode = error.status || 401;
+    const statusCode = err.status || 401;
     res.status(statusCode).json({
       status: statusCode,
-      message: error.message || 'Failed to refresh session',
+      message: err.message || 'Failed to refresh session',
       data: null,
     });
   }
