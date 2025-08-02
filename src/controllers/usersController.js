@@ -1,20 +1,21 @@
 import {
   getAllUsersService,
-  getSavedArticlesService,
+  saveArticleToUserService,
   getUserByIdService,
   getUserCreatedArticlesService,
+  getUserSavedArticlesService,
+  deleteArticleFromUserService,
+  getPopularUsersService,
 } from '../services/usersServices.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export const getAllUsersController = async (req, res, next) => {
   try {
-    const { page = 1, perPage = 10 } = req.query;
-
-    const pageNum = parseInt(page);
-    const perPageNum = parseInt(perPage);
+    const { page, perPage } = parsePaginationParams(req.query);
 
     const { users, pagination } = await getAllUsersService({
-      page: pageNum,
-      perPage: perPageNum,
+      page,
+      perPage,
     });
 
     res.status(200).json({
@@ -48,15 +49,12 @@ export const getUserCreatedArticlesController = async (req, res, next) => {
   try {
     const { userId } = req.params;
 
-    const { page = 1, perPage = 10 } = req.query;
-
-    const pageNum = parseInt(page);
-    const perPageNum = parseInt(perPage);
+    const { page, perPage } = parsePaginationParams(req.query);
 
     const { userArticles, pagination } = await getUserCreatedArticlesService({
       userId,
-      page: pageNum,
-      perPage: perPageNum,
+      page,
+      perPage,
     });
 
     res.status(200).json({
@@ -75,14 +73,12 @@ export const getUserCreatedArticlesController = async (req, res, next) => {
 export const getUserSavedArticlesController = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const { page = 1, perPage = 10 } = req.query;
-    const pageNum = parseInt(page);
-    const perPageNum = parseInt(perPage);
+    const { page, perPage } = parsePaginationParams(req.query);
 
-    const { articles, pagination } = await getSavedArticlesService({
+    const { articles, pagination } = await getUserSavedArticlesService({
       userId,
-      page: pageNum,
-      perPage: perPageNum,
+      page,
+      perPage,
     });
 
     res.status(200).json({
@@ -98,6 +94,62 @@ export const getUserSavedArticlesController = async (req, res, next) => {
   }
 };
 
-export const saveArticleToUserController = async (req, res, next) => {};
+export const saveArticleToUserController = async (req, res, next) => {
+  try {
+    const { userId, articleId } = req.params;
 
-export const deleteArticleFromUserController = async (req, res, next) => {};
+    if (req.user._id.toString() !== userId) {
+      return res.status(403).json({
+        status: 403,
+        message: 'You are not allowed to save an article for another user',
+      });
+    }
+
+    await saveArticleToUserService(userId, articleId);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Article successfully saved',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteArticleFromUserController = async (req, res, next) => {
+  try {
+    const { userId, articleId } = req.params;
+
+    if (req.user._id.toString() !== userId) {
+      return res.status(403).json({
+        status: 403,
+        message: 'You are not allowed to delete an article for another user',
+      });
+    }
+    await deleteArticleFromUserService(userId, articleId);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Article successfully removed from saved list',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPopularUsersController = async (req, res, next) => {
+  try {
+    const limit = Number(req.query.limit) || 5;
+    const parsedLimit = parseInt(limit);
+
+    const users = await getPopularUsersService(parsedLimit);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Popular users fetched successfully',
+      data: { users },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
