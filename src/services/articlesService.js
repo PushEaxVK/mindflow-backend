@@ -42,7 +42,11 @@ export const getPaginatedArticles = async ({
   const sortObj = { [sort]: order === 'asc' ? 1 : -1 };
 
   const [articles, total] = await Promise.all([
-    Article.find(query).sort(sortObj).skip(Number(skip)).limit(Number(limit)),
+    Article.find(query)
+      .populate('author', 'name')
+      .sort(sortObj)
+      .skip(Number(skip))
+      .limit(Number(limit)),
     Article.countDocuments(query),
   ]);
 
