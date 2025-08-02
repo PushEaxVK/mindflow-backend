@@ -13,13 +13,13 @@ export const getAllUsersService = async ({ page, perPage }) => {
     .limit(perPage)
     .exec();
 
-  const paginationData = calculatePaginationData({
+  const pagination = calculatePaginationData({
     total,
     perPage,
     page,
   });
 
-  return { users, paginationData };
+  return { users, pagination };
 };
 
 export const getUserByIdService = async (id) => {
@@ -146,12 +146,23 @@ export const deleteArticleFromUserService = async (userId, articleId) => {
   return article;
 };
 
-export const getPopularUsersService = async (limit = 5) => {
-  const popularUsers = await User.find()
+export const getPopularUsersService = async ({ page, perPage }) => {
+  const skip = (page - 1) * perPage;
+
+  const total = await User.countDocuments();
+
+  const users = await User.find()
     .sort({ articlesAmount: -1 })
-    .limit(limit)
+    .skip(skip)
+    .limit(perPage)
     .select('name avatarUrl articlesAmount')
     .lean();
 
-  return popularUsers;
+  const pagination = calculatePaginationData({
+    total,
+    perPage,
+    page,
+  });
+
+  return { users, pagination };
 };
