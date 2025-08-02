@@ -37,6 +37,10 @@ const usersSchema = new Schema(
       type: String,
       default: 'user',
     },
+    articlesAmount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -53,4 +57,3 @@ usersSchema.methods.toJSON = function () {
 const User = model('User', usersSchema, 'users');
 
 export default User;
-
