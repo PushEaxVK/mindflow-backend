@@ -1,0 +1,46 @@
+post:
+  summary: Refresh access token
+  operationId: refreshSession
+  tags: [Auth]
+  description: Refresh user session and get new access token using session ID
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/RefreshUser.yaml'
+        examples:
+          valid_refresh:
+            summary: Valid session refresh
+            value:
+              sessionId: 507f1f77bcf86cd799439011
+  responses:
+    '200':
+      description: Session successfully refreshed
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [status, message, data]
+            properties:
+              status:
+                type: integer
+                example: 200
+              message:
+                type: string
+                example: Successfully refreshed a session!
+              data:
+                type: object
+                required: [accessToken]
+                properties:
+                  accessToken:
+                    type: string
+                    description: New JWT access token
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    '401':
+      $ref: '../../components/responses/401-users.yaml'
+    '404':
+      $ref: '../../components/responses/404.yaml'
+    '422':
+      $ref: '../../components/responses/400.yaml'
