@@ -39,10 +39,15 @@ export const getUserCreatedArticlesService = async ({
 }) => {
   const skip = (page - 1) * perPage;
 
-  const total = await Article.countDocuments({ ownerId: userId });
+  const filter = {
+    $or: [{ ownerId: userId }, { author: userId }],
+  };
+
+  const total = await Article.countDocuments(filter);
+  // const total = await Article.countDocuments({ ownerId: userId });
 
   const userArticles = await Article.find({ ownerId: userId })
-    .populate('ownerId', 'name')
+    .populate('ownerId', 'name avatarUrl')
     .skip(skip)
     .limit(perPage)
     .lean()
