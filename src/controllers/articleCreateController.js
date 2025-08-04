@@ -4,17 +4,18 @@ import createHttpError from 'http-errors';
 
 export const createArticleFromForm = async (req, res, next) => {
   try {
-    const { title, article, date, ownerId } = req.body;
+    const { title, desc, article, date, ownerId } = req.body;
 
     if (!title || title.length < 3 || title.length > 48) {
       throw createHttpError(400, 'Title must be between 3 and 48 characters');
     }
 
+    if (!desc || desc.length < 5 || desc.length > 100) {
+      throw createHttpError(400, 'Description must be between 5 and 100 characters');
+    }
+
     if (!article || article.length < 100 || article.length > 4000) {
-      throw createHttpError(
-        400,
-        'Article must be between 100 and 4000 characters',
-      );
+      throw createHttpError(400, 'Article must be between 100 and 4000 characters');
     }
 
     if (!date || isNaN(Date.parse(date))) {
@@ -35,6 +36,7 @@ export const createArticleFromForm = async (req, res, next) => {
 
     const newArticle = await Article.create({
       title,
+      desc,
       article,
       img: req.file.filename,
       date: new Date(date),
