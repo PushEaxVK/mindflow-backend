@@ -1,15 +1,16 @@
 import express from 'express';
+
 import {
   fetchArticleById,
-  fetchRecommendedArticles,
-  createManyArticles,
-  deleteAllArticles,
+  // fetchRecommendedArticles,
+  // createManyArticles,
+  // deleteAllArticles,
   fetchAllArticles,
-  fetchSavedArticles,
+  // fetchSavedArticles,
   deleteArticleById,
-  saveArticle,
-  removeSavedArticle,
-  fetchPopularArticles,
+  // saveArticle,
+  // removeSavedArticle,
+  // fetchPopularArticles,
   updateArticleController,
   createArticleController,
 } from '../controllers/articlesController.js';
@@ -25,40 +26,50 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 
 const router = express.Router();
 
+// GET /articles — список статей
 router.get('/', fetchAllArticles);
 
+
+// GET /articles/:id — отримати статтю по id
 router.get('/:id', fetchArticleById);
 
+
+// DELETE /articles/:id — видалити статтю
 router.delete('/:id', authenticate, deleteArticleById);
 
+
+// POST /articles — створити статтю
 router.post(
   '/create',
   authenticate,
-  upload.single('img'),
+  upload.single('image'),
   validateBody(articleSchema),
   ctrlWrapper(createArticleController),
 );
 
+
+// PUT /articles/:id — редагувати статтю
 router.patch(
   '/:id',
   authenticate,
-  upload.single('img'),
+  upload.single('image'),
   validateBody(updateArticleSchema),
   ctrlWrapper(updateArticleController),
 );
 
-router.get('/popular', fetchPopularArticles);
 
-router.delete('/all', deleteAllArticles);
+// router.get('/popular', fetchPopularArticles);
 
-router.post('/:id/save', authenticate, saveArticle);
+// router.delete('/all', deleteAllArticles);
 
-router.delete('/:id/save', authenticate, removeSavedArticle);
+// router.post('/:id/save', authenticate, saveArticle);
 
-router.get('/saved', authenticate, fetchSavedArticles);
+// router.delete('/:id/save', authenticate, removeSavedArticle);
 
-router.get('/recommend', fetchRecommendedArticles);
+// router.get('/saved', authenticate, fetchSavedArticles);
 
-router.post('/', createManyArticles);
+// router.get('/recommend', fetchRecommendedArticles);
+
+// router.post('/', createManyArticles);
 
 export default router;

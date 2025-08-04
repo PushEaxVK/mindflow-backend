@@ -1,5 +1,7 @@
 import multer from 'multer';
-import { TEMP_UPLOAD_DIR } from '../constants/paths.js';
+import path from 'node:path';
+
+export const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'src', 'uploads');//uploads
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -11,8 +13,9 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({
-  storage,
-  limits: { fileSize: 1 * 1024 * 1024 },
-});
+const upload = multer({
+    storage,
+    limits: { fileSize: 1 * 1024 * 1024 }
+ });
 
+export { upload };
