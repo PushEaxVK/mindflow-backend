@@ -71,6 +71,13 @@ export const setupServer = () => {
 
   app.use(router);
   app.use(notFoundHandler);
+
+// Глобальний логер 
+  app.use((err, req, res, next) => {
+  console.error('GLOBAL ERROR:', err); 
+  next(err);
+  });
+  
   app.use(errorHandler);
 
   app.listen(PORT, () => {
