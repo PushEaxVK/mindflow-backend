@@ -23,6 +23,10 @@ const usersSchema = new Schema(
       minlength: 8,
       maxlength: 64,
     },
+    avatarUrl: {
+      type: String,
+      trim: true,
+    },
     savedArticles: [
       {
         type: Schema.Types.ObjectId,
@@ -32,6 +36,10 @@ const usersSchema = new Schema(
     role: {
       type: String,
       default: 'user',
+    },
+    articlesAmount: {
+      type: Number,
+      default: 0,
     },
   },
   {
@@ -47,8 +55,5 @@ usersSchema.methods.toJSON = function () {
 };
 
 const User = model('User', usersSchema, 'users');
+
 export default User;
-
-
-
-

@@ -6,5 +6,4 @@ const router = express.Router();
 
 router.post('/photo', upload.single('photo'), ctrlWrapper(uploadPhotoController));
 
-
 export default router;
