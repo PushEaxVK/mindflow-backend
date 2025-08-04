@@ -4,22 +4,25 @@ import createHttpError from 'http-errors';
 
 export const createArticleFromForm = async (req, res, next) => {
   try {
-    const { title, article, date, author } = req.body;
+    const { title, article, date, ownerId } = req.body;
 
     if (!title || title.length < 3 || title.length > 48) {
       throw createHttpError(400, 'Title must be between 3 and 48 characters');
     }
 
     if (!article || article.length < 100 || article.length > 4000) {
-      throw createHttpError(400, 'Article must be between 100 and 4000 characters');
+      throw createHttpError(
+        400,
+        'Article must be between 100 and 4000 characters',
+      );
     }
 
     if (!date || isNaN(Date.parse(date))) {
       throw createHttpError(400, 'Date is required and must be a valid date');
     }
 
-    if (!author || !mongoose.Types.ObjectId.isValid(author)) {
-      throw createHttpError(400, 'Invalid or missing author');
+    if (!ownerId || !mongoose.Types.ObjectId.isValid(ownerId)) {
+      throw createHttpError(400, 'Invalid or missing ownerId');
     }
 
     if (!req.file) {
@@ -34,12 +37,13 @@ export const createArticleFromForm = async (req, res, next) => {
       title,
       article,
       img: req.file.filename,
-      createdAt: new Date(date),
-      author,
+      date: new Date(date),
+      ownerId,
     });
 
     res.status(201).json({ _id: newArticle._id });
   } catch (err) {
+    console.error('Create article error:', err);
     next(err);
   }
 };
