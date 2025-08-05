@@ -4,7 +4,7 @@ import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { uploadPhotoController } from '../controllers/upload.js';
 const router = express.Router();
 
-router.post('/photo', upload.single('photo'), ctrlWrapper(uploadPhotoController));
+router.post('/', upload.single('photo'), ctrlWrapper(uploadPhotoController));
 
 
 export default router;
