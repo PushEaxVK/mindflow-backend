@@ -1,4 +1,5 @@
 import {
+  createArticleService,
   getArticleById,
   // getRecommendedArticles,
   // getSavedArticles,
@@ -59,57 +60,62 @@ export const fetchArticleById = async (req, res, next) => {
   }
 };
 
-// POST /articles — створити статтю
-export const createArticleController = async (req, res, next) => {
-  try {
-    const { title, desc, article, date, ownerId } = req.body;
+// // POST /articles — створити статтю
+// export const createArticleController = async (req, res, next) => {
+//   try {
+//     const { title, desc, article, date, ownerId } = req.body;
 
-    if (!title || title.length < 3 || title.length > 48) {
-      throw createHttpError(400, 'Title must be between 3 and 48 characters');
-    }
+//     if (!title || title.length < 3 || title.length > 48) {
+//       throw createHttpError(400, 'Title must be between 3 and 48 characters');
+//     }
 
-    // Перевірка desc
-    if (desc && desc.length > 250) {
-      throw createHttpError(400, 'Description must be less then 250');
-    }
+//     // Перевірка desc
+//     if (desc && desc.length > 250) {
+//       throw createHttpError(400, 'Description must be less then 250');
+//     }
 
-    if (!article || article.length < 100 || article.length > 4000) {
-      throw createHttpError(
-        400,
-        'Article must be between 100 and 4000 characters',
-      );
-    }
+//     if (!article || article.length < 100 || article.length > 4000) {
+//       throw createHttpError(
+//         400,
+//         'Article must be between 100 and 4000 characters',
+//       );
+//     }
 
-    if (!date || isNaN(Date.parse(date))) {
-      throw createHttpError(400, 'Date is required and must be a valid date');
-    }
+//     if (!date || isNaN(Date.parse(date))) {
+//       throw createHttpError(400, 'Date is required and must be a valid date');
+//     }
 
-    // if (!author || author.length < 4 || author.length > 50) {
-    //   throw createHttpError(400, 'Author must be between 4 and 50 characters');
-    // }
+//     // if (!author || author.length < 4 || author.length > 50) {
+//     //   throw createHttpError(400, 'Author must be between 4 and 50 characters');
+//     // }
 
-    if (!req.file) {
-      throw createHttpError(400, 'Image is required');
-    }
+//     if (!req.file) {
+//       throw createHttpError(400, 'Image is required');
+//     }
 
-    if (req.file.size > 1024 * 1024) {
-      throw createHttpError(400, 'Image size exceeds 1MB');
-    }
+//     if (req.file.size > 1024 * 1024) {
+//       throw createHttpError(400, 'Image size exceeds 1MB');
+//     }
 
-    const newArticle = await Article.create({
-      title,
-      article,
-      desc,
-      img: req.file ? req.file.filename : null,
-      date: new Date(date),
-      ownerId,
-    });
+//     let imgCloudinary = req?.file ? req?.file?.filename : null;
+//     if (imgCloudinary) {
+//       imgCloudinary = await saveFiles(imgCloudinary);
+//     }
 
-    res.status(201).json({ _id: newArticle._id });
-  } catch (err) {
-    next(err);
-  }
-};
+//     const newArticle = await Article.create({
+//       title,
+//       article,
+//       desc,
+//       img: imgCloudinary,
+//       date: new Date(date),
+//       ownerId,
+//     });
+
+//     res.status(201).json({ _id: newArticle._id });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 // DELETE /articles/{id} — видалити статтю
 export const deleteArticleById = async (req, res, next) => {
@@ -134,30 +140,30 @@ export const deleteArticleById = async (req, res, next) => {
   }
 };
 
-// export const createArticleController = async (req, res, next) => {
-//   try {
-//     const image = await saveFiles(req.file);
+export const createArticleController = async (req, res, next) => {
+  try {
+    const image = await saveFiles(req.file);
 
-//     const articleData = {
-//       ...req.body,
-//       img: image,
-//       rate: req.body.rate || 0,
-//     };
+    const articleData = {
+      ...req.body,
+      img: image,
+      rate: req.body.rate || 0,
+    };
 
-//     const newArticle = await createArticleService(articleData);
+    const newArticle = await createArticleService(articleData);
 
-//     const article = newArticle.toObject();
-//     article.date = new Date(article.date).toISOString().split('T')[0];
+    const article = newArticle.toObject();
+    article.date = new Date(article.date).toISOString().split('T')[0];
 
-//     res.status(201).json({
-//       status: 201,
-//       message: 'Successfully created an article',
-//       data: { ...article },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created an article',
+      data: { ...article },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // PUT /articles/{id} — редагувати статтю
 export const updateArticleController = async (req, res, next) => {
