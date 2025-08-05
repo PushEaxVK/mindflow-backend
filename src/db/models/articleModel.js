@@ -8,10 +8,10 @@ const articleSchema = new Schema(
       trim: true,
     },
     desc: {
-  type: String,
-  required: true,
-  trim: true,
-},
+      type: String,
+      required: false,
+      trim: true,
+    },
     article: {
       type: String,
       required: true,

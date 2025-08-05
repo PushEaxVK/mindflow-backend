@@ -8,11 +8,9 @@ export const articleSchema = Joi.object({
     'string.max': 'Title must not exceed 48 characters',
   }),
 
-  desc: Joi.string().min(100).max(4000).required().messages({
-  'any.required': 'Description is required',
-  'string.min': 'Description must be at least 100 characters',
-  'string.max': 'Description must not exceed 4000 characters',
-}),
+  desc: Joi.string().max(250).required().messages({
+    'string.max': 'Description must not exceed 250 characters',
+  }),
 
   article: Joi.string().min(100).max(4000).required().messages({
     'any.required': 'Article text is required',
@@ -40,11 +38,9 @@ export const updateArticleSchema = Joi.object({
     'string.max': 'Title must not exceed 48 characters',
   }),
 
-  desc: Joi.string().min(100).max(4000).required().messages({
-  'any.required': 'Description is required',
-  'string.min': 'Description must be at least 100 characters',
-  'string.max': 'Description must not exceed 4000 characters',
-}),
+  desc: Joi.string().max(250).required().messages({
+    'string.max': 'Description must not exceed 250 characters',
+  }),
 
   article: Joi.string().min(100).max(4000).required().messages({
     'string.min': 'Article must be at least 100 characters',
