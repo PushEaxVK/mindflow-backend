@@ -65,10 +65,16 @@ export const fetchArticleById = async (req, res, next) => {
 // POST /articles — створити статтю
 export const createArticleController = async (req, res, next) => {
   try {
-    const { title, article, date, author, ownerId } = req.body;
+    const { title, desc, article, date, author, ownerId } = req.body;
+
 
     if (!title || title.length < 3 || title.length > 48) {
       throw createHttpError(400, 'Title must be between 3 and 48 characters');
+    }
+
+    // Перевірка desc
+    if (!desc || desc.length < 100 || desc.length > 4000) {
+      throw createHttpError(400, 'Description must be between 100 and 4000 characters');
     }
 
     if (!article || article.length < 100 || article.length > 4000) {
@@ -94,6 +100,7 @@ export const createArticleController = async (req, res, next) => {
     const newArticle = await Article.create({
       title,
       article,
+      desc,
       img: req.file ? req.file.filename : null,
       date: new Date(date),
       ownerId,
