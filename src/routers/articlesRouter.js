@@ -29,24 +29,20 @@ const router = express.Router();
 // GET /articles — список статей
 router.get('/', fetchAllArticles);
 
-
 // GET /articles/:id — отримати статтю по id
 router.get('/:id', fetchArticleById);
 
-
 // DELETE /articles/:id — видалити статтю
 router.delete('/:id', authenticate, deleteArticleById);
-
 
 // POST /articles — створити статтю
 router.post(
   '/create',
   authenticate,
-  upload.single('image'),
+  upload.single('img'),
   validateBody(articleSchema),
   ctrlWrapper(createArticleController),
 );
-
 
 // PUT /articles/:id — редагувати статтю
 router.patch(
@@ -56,7 +52,6 @@ router.patch(
   validateBody(updateArticleSchema),
   ctrlWrapper(updateArticleController),
 );
-
 
 // router.get('/popular', fetchPopularArticles);
 
