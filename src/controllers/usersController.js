@@ -105,7 +105,7 @@ export const saveArticleToUserController = async (req, res, next) => {
       });
     }
 
-    await saveArticleToUserService(userId, articleId);
+    await saveArticleToUserService({ userId, articleId });
 
     res.status(201).json({
       status: 201,
@@ -126,7 +126,7 @@ export const deleteArticleFromUserController = async (req, res, next) => {
         message: 'You are not allowed to delete an article for another user',
       });
     }
-    await deleteArticleFromUserService(userId, articleId);
+    await deleteArticleFromUserService({ userId, articleId });
 
     res.status(201).json({
       status: 201,
