@@ -1,5 +1,5 @@
-import { ArticlesCollection } from '../db/models/articles';
-import { UsersCollection } from '../db/models/users';
+import ArticlesCollection  from '../db/models/articleModel.js';
+import  UsersCollection  from '../db/models/users.js';
 
 export const getUserById = async (userId) => {
   return UsersCollection.findById(userId).select('-password');

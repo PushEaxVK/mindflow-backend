@@ -1,26 +1,37 @@
+import { updateUserService } from "../services/userUpload.js";
 import { uploadCloud } from "../utils/uploadToClaudinary.js";
 
 
-
-
-export async  function uploadPhotoController(req, res, next) {
+export async function uploadPhotoController(req, res, next) {
   try {
-   
+    
     if (!req.file) {
-      return res.status(400).json({ status: 400, message: 'No file uploaded.' });
+      return res.status(400).json({
+        status: 400,
+        message: 'No file uploaded.'
+      });
     }
 
-    console.log("Файл знайдено, завантажуємо в Cloudinary...");
+    
     const photoUrl = await uploadCloud(req.file.path);
 
-    const photoAdded = {
-      photo: photoUrl,
-    };
-
-    res.status(201).json({ status: 201, message: 'Successfully added photo!', data: photoAdded });
-
-  } catch (error) {
+   
     
+    const userId = req.user._id;
+
+
+    const updatedUser = await updateUserService(userId, {
+      avatarUrl: photoUrl
+    });
+
+
+    res.status(200).json({
+      status: 200,
+      message: 'Фото успішно завантажено та збережено!',
+      data: updatedUser,
+    });
+  } catch (error) {
+
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
         status: 400,
@@ -32,4 +43,3 @@ export async  function uploadPhotoController(req, res, next) {
     next(error);
   }
 }
-
