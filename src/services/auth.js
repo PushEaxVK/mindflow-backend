@@ -9,13 +9,7 @@ import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
 import { isTokenExpired } from '../utils/isTokenExpired.js';
 
 const JWT_SECRET = getEnvVar(ENV_VARS.JWT_SECRET);
-// const JWT_ACCESS_SECRET = getEnvVar(ENV_VARS.JWT_ACCESS_SECRET);
 const JWT_REFRESH_SECRET = getEnvVar(ENV_VARS.JWT_REFRESH_SECRET);
-
-// const ACCESS_TOKEN_EXPIRES_IN = '15m';
-// const REFRESH_TOKEN_EXPIRES_IN = '7d';
-// const ACCESS_TOKEN_EXPIRES_IN_MS = 15 * 60 * 1000;
-// const REFRESH_TOKEN_EXPIRES_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 const JWT_ACCESS_EXPIRES_IN = getEnvVar('JWT_ACCESS_EXPIRES_IN', '15m');
 const JWT_REFRESH_EXPIRES_IN = getEnvVar('JWT_REFRESH_EXPIRES_IN', '30d');
@@ -176,11 +170,6 @@ export const refreshSession = async (refreshToken) => {
     return {
       ...newSessionData,
       user: {
-        // _id: user._id,
-        // name: user.name,
-        // email: user.email,
-        // createdAt: user.createdAt,
-        // updatedAt: user.updatedAt,
         _id: user._id,
         name: user.name,
         email: user.email,
