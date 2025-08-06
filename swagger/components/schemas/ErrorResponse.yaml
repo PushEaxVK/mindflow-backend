@@ -1,0 +1,6 @@
+ErrorResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: "Description must be between 5 and 100 characters"

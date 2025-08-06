@@ -1,0 +1,42 @@
+delete:
+  summary: Delete article by ID
+  tags:
+    - Articles
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: Article ID
+      schema:
+        type: string
+  security:
+    - bearerAuth: []
+  responses:
+    '200':
+      description: Article deleted successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Article deleted successfully
+    '403':
+      description: Forbidden (not author or admin)
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'
+    '404':
+      description: Article not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'
+    '400':
+      description: Invalid article ID
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'
