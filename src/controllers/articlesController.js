@@ -1,36 +1,54 @@
-import { 
-  getArticleById, 
-  getRecommendedArticles, 
-  getSavedArticles,
-  getPopularArticles,
-  getPaginatedArticles
+import {
+  createArticleService,
+  getArticleById,
+  // getRecommendedArticles,
+  // getSavedArticles,
+  // getPopularArticles,
+  getPaginatedArticles,
+  // createArticleService,
+  updateArticleService,
 } from '../services/articlesService.js';
-import { readFile } from 'fs/promises';
-import path from 'path';
+// import { readFile } from 'fs/promises';
+// import path from 'path';
 import Article from '../db/models/articleModel.js';
-import User from '../db/models/users.js';
+// import User from '../db/models/users.js';
+// import { ROOT_DIR } from '../constants/paths.js';
+// import mongoose from 'mongoose';
+// import createHttpError from 'http-errors';
+// import { articleSchema } from '../validation/articlesValidation.js';
+import { saveFiles } from '../utils/saveFiles.js';
 
+import createHttpError from 'http-errors';
 
-export const fetchPopularArticles = async (req, res, next) => {
-  try {
-    const limit = Number(req.query.limit) || 10;
-    const articles = await getPopularArticles(limit);
-    res.json(articles);
-  } catch (err) {
-    next(err);
-  }
-};
+// export const fetchPopularArticles = async (req, res, next) => {
+//   try {
+//     const limit = Number(req.query.limit) || 10;
+//     const articles = await getPopularArticles(limit);
+//     res.json(articles);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
-
+// GET /articles — список статей (з пагінацією, фільтрами, сортуванням)
 export const fetchAllArticles = async (req, res, next) => {
   try {
-    const { page, limit, sort, order, tags, author } = req.query;
-    const data = await getPaginatedArticles({ page, limit, sort, order, tags, author });
+    const { page, limit, sort, order, tags, ownerId } = req.query;
+    const data = await getPaginatedArticles({
+      page,
+      limit,
+      sort,
+      order,
+      tags,
+      ownerId,
+    });
     res.json(data);
   } catch (err) {
     next(err);
   }
 };
+
+// GET /articles/{id} — отримати статтю по id
 
 export const fetchArticleById = async (req, res, next) => {
   try {
@@ -42,139 +60,64 @@ export const fetchArticleById = async (req, res, next) => {
   }
 };
 
-export const fetchRecommendedArticles = async (req, res, next) => {
-  try {
-    const tags = req.query.tags ? req.query.tags.split(',') : [];
-    const articles = await getRecommendedArticles(tags);
-    res.json(articles);
-  } catch (err) {
-    next(err);
-  }
-};
+// // POST /articles — створити статтю
+// export const createArticleController = async (req, res, next) => {
+//   try {
+//     const { title, desc, article, date, ownerId } = req.body;
 
-export const createManyArticles = async (req, res, next) => {
-  try {
-    const __dirname = path.dirname(new URL(import.meta.url).pathname);
-    const filePath = path.join(__dirname, '../../articles.json');
-    const data = await readFile(filePath, 'utf-8');
-    const articles = JSON.parse(data);
+//     if (!title || title.length < 3 || title.length > 48) {
+//       throw createHttpError(400, 'Title must be between 3 and 48 characters');
+//     }
 
-    await Article.insertMany(articles);
+//     // Перевірка desc
+//     if (desc && desc.length > 250) {
+//       throw createHttpError(400, 'Description must be less then 250');
+//     }
 
-    res.status(201).json({ message: 'Articles added successfully' });
-  } catch (err) {
-    next(err);
-  }
-};
+//     if (!article || article.length < 100 || article.length > 4000) {
+//       throw createHttpError(
+//         400,
+//         'Article must be between 100 and 4000 characters',
+//       );
+//     }
 
-export const deleteAllArticles = async (req, res, next) => {
-  try {
-    await Article.deleteMany({});
-    res.json({ message: 'All articles deleted' });
-  } catch (err) {
-    next(err);
-  }
-};
+//     if (!date || isNaN(Date.parse(date))) {
+//       throw createHttpError(400, 'Date is required and must be a valid date');
+//     }
 
+//     // if (!author || author.length < 4 || author.length > 50) {
+//     //   throw createHttpError(400, 'Author must be between 4 and 50 characters');
+//     // }
 
-export const createSingleArticle = async (req, res, next) => {
-  try {
-    const newArticle = await Article.create({
-      ...req.body,
-      author: req.user._id,
-    });
-    res.status(201).json(newArticle);
-  } catch (err) {
-    next(err);
-  }
-};
+//     if (!req.file) {
+//       throw createHttpError(400, 'Image is required');
+//     }
 
-export const fetchSavedArticles = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-    const articles = await getSavedArticles(userId);
-    res.json(articles);
-  } catch (err) {
-    next(err);
-  }
-};
+//     if (req.file.size > 1024 * 1024) {
+//       throw createHttpError(400, 'Image size exceeds 1MB');
+//     }
 
-export const saveArticle = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-    const articleId = req.params.id;
+//     let imgCloudinary = req?.file ? req?.file?.filename : null;
+//     if (imgCloudinary) {
+//       imgCloudinary = await saveFiles(imgCloudinary);
+//     }
 
-    const article = await Article.findById(articleId);
-    if (!article) {
-      return res.status(404).json({ message: 'Article not found' });
-    }
+//     const newArticle = await Article.create({
+//       title,
+//       article,
+//       desc,
+//       img: imgCloudinary,
+//       date: new Date(date),
+//       ownerId,
+//     });
 
-    const user = await User.findById(userId);
-    if (user.savedArticles.includes(articleId)) {
-      return res.status(400).json({ message: 'Article already saved' });
-    }
+//     res.status(201).json({ _id: newArticle._id });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
-    user.savedArticles.push(articleId);
-    await user.save();
-
-    res.json({ message: 'Article saved successfully' });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const removeSavedArticle = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-    const articleId = req.params.id;
-
-    const article = await Article.findById(articleId);
-    if (!article) {
-      return res.status(404).json({ message: 'Article not found' });
-    }
-
-    const user = await User.findById(userId);
-
-    const initialLength = user.savedArticles.length;
-    user.savedArticles = user.savedArticles.filter(
-      id => id.toString() !== articleId
-    );
-
-    if (user.savedArticles.length === initialLength) {
-      return res.status(400).json({ message: 'Article was not saved' });
-    }
-
-    await user.save();
-    res.json({ message: 'Article removed from saved' });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const updateArticleById = async (req, res, next) => {
-  try {
-    const article = await Article.findById(req.params.id);
-    if (!article) {
-      return res.status(404).json({ message: 'Article not found' });
-    }
-    if (
-      article.author && 
-      article.author.toString() !== req.user._id.toString() &&
-      req.user.role !== 'admin'
-    ) {
-      return res.status(403).json({ message: 'You are not the author or admin' });
-    }
-    const updatedArticle = await Article.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    res.json(updatedArticle);
-  } catch (err) {
-    next(err);
-  }
-};
-
+// DELETE /articles/{id} — видалити статтю
 export const deleteArticleById = async (req, res, next) => {
   try {
     const article = await Article.findById(req.params.id);
@@ -182,11 +125,13 @@ export const deleteArticleById = async (req, res, next) => {
       return res.status(404).json({ message: 'Article not found' });
     }
     if (
-      article.author && 
+      article.author &&
       article.author.toString() !== req.user._id.toString() &&
       req.user.role !== 'admin'
     ) {
-      return res.status(403).json({ message: 'You are not the author or admin' });
+      return res
+        .status(403)
+        .json({ message: 'You are not the author or admin' });
     }
     await Article.findByIdAndDelete(req.params.id);
     res.json({ message: 'Article deleted successfully' });
@@ -195,21 +140,207 @@ export const deleteArticleById = async (req, res, next) => {
   }
 };
 
+export const createArticleController = async (req, res, next) => {
+  try {
+    const image = await saveFiles(req.file);
 
+    const articleData = {
+      ...req.body,
+      img: image,
+      rate: req.body.rate || 0,
+    };
 
+    const newArticle = await createArticleService(articleData);
 
+    const article = newArticle.toObject();
+    article.date = new Date(article.date).toISOString().split('T')[0];
 
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created an article',
+      data: { ...article },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
+// PUT /articles/{id} — редагувати статтю
+export const updateArticleController = async (req, res, next) => {
+  try {
+    const articleId = req.params.id;
 
+    if (!articleId) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Article ID is required',
+      });
+    }
 
+    const updatedData = {
+      ...req.body,
+      rate: req.body.rate || 0,
+    };
 
+    if (req.file) {
+      const imageUrl = await saveFiles(req.file);
+      updatedData.img = imageUrl;
+    }
 
+    const updatedArticle = await updateArticleService(articleId, updatedData);
 
+    if (!updatedArticle) {
+      throw createHttpError(404, 'Article not found');
+    }
+    const article = updatedArticle.toObject();
+    article.date = new Date(article.date).toISOString().split('T')[0];
 
+    if (!updatedArticle) {
+      return res
+        .status(404)
+        .json({ status: 404, message: 'Article not found' });
+    }
 
+    res.status(200).json({
+      status: 200,
+      message: 'Article updated successfully',
+      data: { ...article },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
+// export const fetchRecommendedArticles = async (req, res, next) => {
+//   try {
+//     const tags = req.query.tags ? req.query.tags.split(',') : [];
+//     const articles = await getRecommendedArticles(tags);
+//     res.json(articles);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
+// export const createManyArticles = async (req, res, next) => {
+//   try {
+//     const filePath = path.join(ROOT_DIR, '../articles.json');
+//     const data = await readFile(filePath, 'utf-8');
+//     const articles = JSON.parse(data);
 
+//     const normalizedArticles = articles.map((article) => {
+//       return {
+//         ...article,
+//         _id: new mongoose.Types.ObjectId(article._id?.$oid || article._id),
+//         author: new mongoose.Types.ObjectId(
+//           article.author?.$oid || article.author,
+//         ),
+//       };
+//     });
 
+//     await Article.insertMany(normalizedArticles);
 
+//     res.status(201).json({ message: 'Articles added successfully' });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
+// export const deleteAllArticles = async (req, res, next) => {
+//   try {
+//     await Article.deleteMany({});
+//     res.status(200).json({
+//       status: 200,
+//       message: 'Article have been deleted successfully',
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// export const fetchSavedArticles = async (req, res, next) => {
+//   try {
+//     const userId = req.user._id;
+//     const articles = await getSavedArticles(userId);
+//     res.json(articles);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// export const saveArticle = async (req, res, next) => {
+//   try {
+//     const userId = req.user._id;
+//     const articleId = req.params.id;
+
+//     const article = await Article.findById(articleId);
+//     if (!article) {
+//       return res.status(404).json({ message: 'Article not found' });
+//     }
+
+//     const user = await User.findById(userId);
+//     if (user.savedArticles.includes(articleId)) {
+//       return res.status(400).json({ message: 'Article already saved' });
+//     }
+
+//     user.savedArticles.push(articleId);
+//     await user.save();
+
+//     res.json({ message: 'Article saved successfully' });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// export const removeSavedArticle = async (req, res, next) => {
+//   try {
+//     const userId = req.user._id;
+//     const articleId = req.params.id;
+
+//     const article = await Article.findById(articleId);
+//     if (!article) {
+//       return res.status(404).json({ message: 'Article not found' });
+//     }
+
+//     const user = await User.findById(userId);
+
+//     const initialLength = user.savedArticles.length;
+//     user.savedArticles = user.savedArticles.filter(
+//       (id) => id.toString() !== articleId,
+//     );
+
+//     if (user.savedArticles.length === initialLength) {
+//       return res.status(400).json({ message: 'Article was not saved' });
+//     }
+
+//     await user.save();
+//     res.json({ message: 'Article removed from saved' });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+// export const updateArticleById = async (req, res, next) => {
+//   try {
+//     const article = await Article.findById(req.params.id);
+//     if (!article) {
+//       return res.status(404).json({ message: 'Article not found' });
+//     }
+//     if (
+//       article.author &&
+//       article.author.toString() !== req.user._id.toString() &&
+//       req.user.role !== 'admin'
+//     ) {
+//       return res
+//         .status(403)
+//         .json({ message: 'You are not the author or admin' });
+//     }
+//     const updatedArticle = await Article.findByIdAndUpdate(
+//       req.params.id,
+//       req.body,
+//       { new: true, runValidators: true },
+//     );
+//     res.json(updatedArticle);
+//   } catch (err) {
+//     next(err);
+//   }
+// };

@@ -11,9 +11,6 @@ import { UPLOAD_DIR } from './constants/paths.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
 import uploadsRouter from './routers/uploadsRoute.js';
 
-
-import authRouter from './routers/auth.routes.js'; 
-
 const PORT = Number(getEnvVar(ENV_VARS.PORT, '3000'));
 
 export const setupServer = () => {
@@ -26,7 +23,32 @@ export const setupServer = () => {
     }),
   );
 
-  app.use(cors());
+  const APP_DOMAIN = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://localhost:3000',
+    'http://localhost:3001',
+
+    'https://mindflow-frontend.onrender.com',
+    'https://mindflow-frontend.vercel.app',
+    'http://localhost:5176',
+  ];
+
+  const corsOptions = {
+    origin: (origin, callback) => {
+      if (!origin || APP_DOMAIN.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  };
+
+  app.use(cors(corsOptions));
 
   app.use(cookieParser());
 
@@ -45,18 +67,20 @@ export const setupServer = () => {
   app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api-docs', swaggerDocs());
 
-  
-  app.use('/auth', authRouter);
-
-    app.use('/photo', uploadsRouter);
-
+  app.use('/photo', uploadsRouter);
 
   app.use(router);
   app.use(notFoundHandler);
+
+// Глобальний логер 
+  app.use((err, req, res, next) => {
+  console.error('GLOBAL ERROR:', err); 
+  next(err);
+  });
+  
   app.use(errorHandler);
 
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
-

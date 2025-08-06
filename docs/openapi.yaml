@@ -3,14 +3,13 @@ info:
   version: 1.0.0
   title: Harmoniq Backend API
   description: >
-    API для керування статтями, авторизацією та збереженими статтями у проекті Harmoniq.
+    API for managing articles, authentication, and saved articles in the Harmoniq project.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 servers:
   - url: http://localhost:3000
-    
   - url: https://mindflow-backend-s1cw.onrender.com/api-docs
 
 security:
@@ -18,14 +17,14 @@ security:
 
 tags:
   - name: Auth
-    description: Реєстрація та логін
+    description: Registration and login
   - name: Articles
-    description: Операції зі статтями
+    description: Article operations
 
 paths:
   /auth/register:
     post:
-      summary: Реєстрація нового користувача
+      summary: Register a new user
       operationId: registerUser
       tags: [Auth]
       requestBody:
@@ -36,28 +35,30 @@ paths:
               $ref: '#/components/schemas/RegisterUser'
       responses:
         '201':
-          description: Користувач успішно зареєстрований
+          description: User successfully registered
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '400':
-          description: Користувач вже існує
+          description: User already exists
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '422':
-          description: Некоректні дані
+          description: Invalid data
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /auth/login:
     post:
-      summary: Логін користувача (отримання JWT)
+      summary: User login (JWT retrieval)
       operationId: loginUser
       tags: [Auth]
+      security: []
       requestBody:
         required: true
         content:
@@ -66,22 +67,86 @@ paths:
               $ref: '#/components/schemas/LoginUser'
       responses:
         '200':
-          description: Логін успішний, повертає JWT токен
+          description: Login successful, returns JWT token
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  token:
-                    type: string
+                $ref: '#/components/schemas/LoginResponse'
         '401':
-          description: Невірні облікові дані
+          description: Invalid credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '422':
-          description: Некоректні дані
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      summary: User logout
+      operationId: logoutUser
+      tags: [Auth]
+      description: Logout user and invalidate current session
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: User successfully logged out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      operationId: refreshSession
+      tags: [Auth]
+      description: Refresh user session and get new access token using session ID
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshUser'
+      responses:
+        '200':
+          description: Session successfully refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '401':
+          description: Unauthorized - Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Invalid data
           content:
             application/json:
               schema:
@@ -89,7 +154,7 @@ paths:
 
   /articles/create:
     post:
-      summary: Створення нової статті (авторизація)
+      summary: Create a new article (authorization required)
       operationId: createArticle
       tags: [Articles]
       requestBody:
@@ -100,19 +165,19 @@ paths:
               $ref: '#/components/schemas/CreateArticle'
       responses:
         '201':
-          description: Стаття створена
+          description: Article created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
         '400':
-          description: Невалідні дані
+          description: Invalid data
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '401':
-          description: Неавторизовано
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -120,7 +185,7 @@ paths:
 
   /articles:
     get:
-      summary: Отримати список статей (з пагінацією, фільтрацією, сортуванням)
+      summary: Get list of articles (with pagination, filtering, sorting)
       operationId: getArticles
       tags: [Articles]
       parameters:
@@ -129,39 +194,39 @@ paths:
           schema:
             type: integer
             default: 1
-          description: Номер сторінки
+          description: Page number
         - in: query
           name: limit
           schema:
             type: integer
             default: 10
-          description: Кількість статей на сторінку
+          description: Number of articles per page
         - in: query
           name: sort
           schema:
             type: string
             example: createdAt
-          description: Поле для сортування
+          description: Field for sorting
         - in: query
           name: order
           schema:
             type: string
             enum: [asc, desc]
             default: desc
-          description: Порядок сортування
+          description: Sorting order
         - in: query
           name: tags
           schema:
             type: string
-          description: Список тегів через кому
+          description: List of tags, comma-separated
         - in: query
           name: author
           schema:
             type: string
-          description: ID автора
+          description: Author ID
       responses:
         '200':
-          description: Список статей з пагінацією
+          description: List of articles with pagination
           content:
             application/json:
               schema:
@@ -178,7 +243,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/Article'
         '400':
-          description: Помилка запиту
+          description: Bad request
           content:
             application/json:
               schema:
@@ -186,12 +251,12 @@ paths:
 
   /articles/popular:
     get:
-      summary: Отримати популярні статті
+      summary: Get popular articles
       operationId: getPopularArticles
       tags: [Articles]
       responses:
         '200':
-          description: Популярні статті
+          description: Popular articles
           content:
             application/json:
               schema:
@@ -199,7 +264,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Article'
         '404':
-          description: Не знайдено жодної статті
+          description: No articles found
           content:
             application/json:
               schema:
@@ -207,7 +272,7 @@ paths:
 
   /articles/{id}:
     get:
-      summary: Отримати одну статтю по id
+      summary: Get article by id
       operationId: getArticleById
       tags: [Articles]
       parameters:
@@ -216,22 +281,22 @@ paths:
           required: true
           schema:
             type: string
-          description: ID статті
+          description: Article ID
       responses:
         '200':
-          description: Стаття знайдена
+          description: Article found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
         '404':
-          description: Стаття не знайдена
+          description: Article not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     patch:
-      summary: Редагування статті (автор/адмін)
+      summary: Edit article (author/admin)
       operationId: updateArticle
       tags: [Articles]
       parameters:
@@ -240,7 +305,7 @@ paths:
           required: true
           schema:
             type: string
-          description: ID статті
+          description: Article ID
       requestBody:
         required: true
         content:
@@ -249,31 +314,31 @@ paths:
               $ref: '#/components/schemas/CreateArticle'
       responses:
         '200':
-          description: Стаття оновлена
+          description: Article updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
         '401':
-          description: Неавторизовано
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: Не автор або не адмін
+          description: Not the author or not admin
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Стаття не знайдена
+          description: Article not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Видалення статті (автор/адмін)
+      summary: Delete article (author/admin)
       operationId: deleteArticle
       tags: [Articles]
       parameters:
@@ -282,10 +347,10 @@ paths:
           required: true
           schema:
             type: string
-          description: ID статті
+          description: Article ID
       responses:
         '200':
-          description: Стаття видалена
+          description: Article deleted
           content:
             application/json:
               schema:
@@ -295,19 +360,19 @@ paths:
                     type: string
                     example: Article deleted successfully
         '401':
-          description: Неавторизовано
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: Не автор або не адмін
+          description: Not the author or not admin
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Стаття не знайдена
+          description: Article not found
           content:
             application/json:
               schema:
@@ -315,7 +380,7 @@ paths:
 
   /articles/{id}/save:
     post:
-      summary: Зберегти статтю для користувача
+      summary: Save article for user
       operationId: saveArticle
       tags: [Articles]
       parameters:
@@ -324,10 +389,10 @@ paths:
           required: true
           schema:
             type: string
-          description: ID статті
+          description: Article ID
       responses:
         '200':
-          description: Стаття збережена
+          description: Article saved
           content:
             application/json:
               schema:
@@ -337,25 +402,25 @@ paths:
                     type: string
                     example: Article saved successfully
         '400':
-          description: Стаття вже у saved
+          description: Article is already saved
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '401':
-          description: Неавторизовано
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Стаття не знайдена
+          description: Article not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Видалити статтю із saved
+      summary: Remove article from saved
       operationId: removeSavedArticle
       tags: [Articles]
       parameters:
@@ -364,10 +429,10 @@ paths:
           required: true
           schema:
             type: string
-          description: ID статті
+          description: Article ID
       responses:
         '200':
-          description: Стаття видалена із saved
+          description: Article removed from saved
           content:
             application/json:
               schema:
@@ -377,19 +442,19 @@ paths:
                     type: string
                     example: Article removed from saved
         '400':
-          description: Статті не було у saved
+          description: Article was not in saved
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '401':
-          description: Неавторизовано
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Стаття не знайдена
+          description: Article not found
           content:
             application/json:
               schema:
@@ -397,12 +462,12 @@ paths:
 
   /articles/saved:
     get:
-      summary: Отримати збережені користувачем статті
+      summary: Get user's saved articles
       operationId: getSavedArticles
       tags: [Articles]
       responses:
         '200':
-          description: Список збережених статей
+          description: List of saved articles
           content:
             application/json:
               schema:
@@ -410,13 +475,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Article'
         '401':
-          description: Неавторизовано
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Не знайдено збережених статей
+          description: No saved articles found
           content:
             application/json:
               schema:
@@ -436,13 +501,22 @@ components:
       properties:
         name:
           type: string
+          description: User's full name
           example: Zoia Plus
+          maxLength: 100
         email:
           type: string
+          format: email
+          description: User's email address
           example: user@example.com
+          maxLength: 64
         password:
           type: string
-          example: secretpass
+          description: User's password (must contain letters, numbers, and special characters)
+          example: MyPass123!
+          minLength: 8
+          maxLength: 64
+          pattern: '^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$'
 
     LoginUser:
       type: object
@@ -450,10 +524,81 @@ components:
       properties:
         email:
           type: string
+          format: email
+          description: User's email address
           example: user@example.com
+          maxLength: 64
         password:
           type: string
-          example: secretpass
+          description: User's password (must contain letters, numbers, and special characters)
+          example: MyPass123!
+          minLength: 8
+          maxLength: 64
+          pattern: '^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,64}$'
+
+    RefreshUser:
+      type: object
+      required: [sessionId]
+      properties:
+        sessionId:
+          type: string
+          description: Session identifier for token refresh
+          example: 507f1f77bcf86cd799439011
+
+    LoginResponse:
+      type: object
+      required: [status, message, data]
+      properties:
+        status:
+          type: integer
+          example: 200
+          description: HTTP status code
+        message:
+          type: string
+          example: Successfully logged in a user!
+          description: Success message
+        data:
+          type: object
+          required: [accessToken]
+          properties:
+            accessToken:
+              type: string
+              description: JWT access token
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+    LogoutResponse:
+      type: object
+      required: [status, message]
+      properties:
+        status:
+          type: integer
+          example: 204
+          description: HTTP status code for successful logout
+        message:
+          type: string
+          example: Successfully logged out!
+          description: Success message
+
+    RefreshResponse:
+      type: object
+      required: [status, message, data]
+      properties:
+        status:
+          type: integer
+          example: 200
+          description: HTTP status code
+        message:
+          type: string
+          example: Successfully refreshed a session!
+          description: Success message
+        data:
+          type: object
+          required: [accessToken]
+          properties:
+            accessToken:
+              type: string
+              description: New JWT access token
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
     User:
       type: object
@@ -471,15 +616,15 @@ components:
       properties:
         title:
           type: string
-          example: Нова стаття
+          example: New article
         text:
           type: string
-          example: Тут текст статті...
+          example: Article text goes here...
         tags:
           type: array
           items:
             type: string
-          example: [здоровʼя, баланс]
+          example: [health, balance]
         image:
           type: string
           example: https://site.com/images/img.jpg
