@@ -9,7 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 servers:
-  - url: https://mindflow-backend-s1cw.onrender.com
+  - url: https://mindflow-backend-iwk7.onrender.com
 
 security:
   - bearerAuth: []
