@@ -11,10 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
-    },
-    {
-      "url": "https://mindflow-backend-s1cw.onrender.com/api-docs"
+      "url": "https://mindflow-backend-s1cw.onrender.com"
     }
   ],
   "security": [
@@ -422,6 +419,7 @@
         "tags": [
           "Articles"
         ],
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -521,40 +519,6 @@
         }
       }
     },
-    "/articles/popular": {
-      "get": {
-        "summary": "Get popular articles",
-        "operationId": "getPopularArticles",
-        "tags": [
-          "Articles"
-        ],
-        "responses": {
-          "200": {
-            "description": "Popular articles",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Article"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No articles found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/articles/{id}": {
       "get": {
         "summary": "Get article by id",
@@ -562,24 +526,33 @@
         "tags": [
           "Articles"
         ],
+        "security": [],
         "parameters": [
           {
             "in": "path",
             "name": "id",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": "Article ID"
+              "type": "string",
+              "description": "Article ID"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Article found",
+            "description": "Article and recommended articles",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Article"
+                  "type": "object",
+                  "properties": {
+                    "article": {
+                      "$ref": "#/components/schemas/Article"
+                    },
+                    "recommended": {
+                      "type": "array"
+                    }
+                  }
                 }
               }
             }
