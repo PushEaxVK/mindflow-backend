@@ -5,6 +5,7 @@ import {
   // getSavedArticles,
   // getPopularArticles,
   getPaginatedArticles,
+  getRecommendedArticlesById,
   // createArticleService,
   updateArticleService,
 } from '../services/articlesService.js';
@@ -50,16 +51,30 @@ export const fetchAllArticles = async (req, res, next) => {
 
 // GET /articles/{id} — отримати статтю по id
 
+// export const fetchArticleById = async (req, res, next) => {
+//   try {
+//     const article = await getArticleById(req.params.id);
+//     if (!article) return res.status(404).json({ message: 'Article not found' });
+//     res.json(article);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 export const fetchArticleById = async (req, res, next) => {
   try {
     const article = await getArticleById(req.params.id);
-    if (!article) return res.status(404).json({ message: 'Article not found' });
-    res.json(article);
+
+    if (!article) {
+      return res.status(404).json({ message: 'Article not found' });
+    }
+
+    const recommended = await getRecommendedArticlesById(article._id);
+
+    res.json({ article, recommended });
   } catch (err) {
     next(err);
   }
 };
-
 // // POST /articles — створити статтю
 // export const createArticleController = async (req, res, next) => {
 //   try {
