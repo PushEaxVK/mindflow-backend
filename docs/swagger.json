@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.3",
   "info": {
     "version": "1.0.0",
     "title": "Harmoniq Backend API",
@@ -70,26 +70,72 @@
                 "schema": {
                   "type": "object",
                   "required": [
-                    "_id",
-                    "name",
-                    "email"
+                    "status",
+                    "message",
+                    "data"
                   ],
                   "properties": {
-                    "_id": {
-                      "type": "string",
-                      "description": "User unique identifier",
-                      "example": "507f1f77bcf86cd799439011"
+                    "status": {
+                      "type": "integer",
+                      "example": 201,
+                      "description": "HTTP status code"
                     },
-                    "name": {
+                    "message": {
                       "type": "string",
-                      "description": "User's full name",
-                      "example": "Maria Koval"
+                      "example": "Successfully registered user!",
+                      "description": "Success message"
                     },
-                    "email": {
-                      "type": "string",
-                      "format": "email",
-                      "description": "User's email address",
-                      "example": "user@example.com"
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "user",
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "required": [
+                            "_id",
+                            "name",
+                            "email"
+                          ],
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "description": "User unique identifier",
+                              "example": "507f1f77bcf86cd799439011"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "User's full name",
+                              "example": "Maria Koval"
+                            },
+                            "email": {
+                              "type": "string",
+                              "format": "email",
+                              "description": "User's email address",
+                              "example": "user@example.com"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "User creation timestamp",
+                              "example": "2024-01-15T10:30:00.000Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "User last update timestamp",
+                              "example": "2024-01-15T10:30:00.000Z"
+                            }
+                          }
+                        },
+                        "accessToken": {
+                          "type": "string",
+                          "description": "JWT access token",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                        }
+                      }
                     }
                   }
                 }
@@ -104,13 +150,33 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string",
-                      "examples": [
-                        "The name must be between 2 and 32 characters long",
-                        "Invalid email address",
-                        "Password must be between 8 and 64 characters long",
-                        "Password must contain both letters and numbers"
-                      ]
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "name_validation_error": {
+                    "summary": "Name validation error",
+                    "value": {
+                      "message": "The name must be between 2 and 32 characters long"
+                    }
+                  },
+                  "email_validation_error": {
+                    "summary": "Email validation error",
+                    "value": {
+                      "message": "Invalid email address"
+                    }
+                  },
+                  "password_length_error": {
+                    "summary": "Password length error",
+                    "value": {
+                      "message": "Password must be between 8 and 64 characters long"
+                    }
+                  },
+                  "password_pattern_error": {
+                    "summary": "Password pattern error",
+                    "value": {
+                      "message": "Password must contain both letters and numbers"
                     }
                   }
                 }
