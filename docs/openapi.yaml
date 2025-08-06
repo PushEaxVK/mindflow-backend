@@ -9,8 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 servers:
-  - url: http://localhost:3000
-  - url: https://mindflow-backend-s1cw.onrender.com/api-docs
+  - url: https://mindflow-backend-s1cw.onrender.com
 
 security:
   - bearerAuth: []
@@ -266,6 +265,7 @@ paths:
       summary: Get list of articles (with pagination, filtering, sorting)
       operationId: getArticles
       tags: [Articles]
+      security: []
       parameters:
         - in: query
           name: page
@@ -327,59 +327,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /articles/popular:
+  # /articles/popular:
+  #   get:
+  #     summary: Get popular articles
+  #     operationId: getPopularArticles
+  #     tags: [Articles]
+  #     responses:
+  #       '200':
+  #         description: Popular articles
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/Article'
+  #       '404':
+  #         description: No articles found
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Error'
+
+  /articles/{id}:
     get:
-      summary: Get popular articles
-      operationId: getPopularArticles
+      summary: Get article by id
+      operationId: getArticleById
       tags: [Articles]
+      security: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            description: Article ID
       responses:
         '200':
-          description: Popular articles
+          description: Article and recommended articles
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Article'
+                type: object
+                properties:
+                  article:
+                    $ref: '#/components/schemas/Article'
+                  recommended:
+                    type: array
+                    # items:
+                    # $ref: '#/components/schemas/ArticleShort'
         '404':
-          description: No articles found
+          description: Article not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-  /articles/{id}:
-    get:
-       summary: Get article by id
-       operationId: getArticleById
-       tags: [Articles]
-       parameters:
-        in: path
-        name: id
-        required: true
-        schema:
-        type: string
-     description: Article ID
-  responses:
-    '200':
-      description: Article and recommended articles
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              article:
-                $ref: '#/components/schemas/Article'
-              recommended:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ArticleShort'
-    '404':
-      description: Article not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
 
     patch:
       summary: Edit article (author/admin)
