@@ -1,0 +1,47 @@
+post:
+  summary: Register a new user
+  operationId: registerUser
+  tags: [Auth]
+  description: Register a user and receive JWT access token and session cookies
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/RegisterUser.yaml'
+        examples:
+          valid_registration:
+            summary: Valid registration input
+            value:
+              name: John Doe
+              email: john.doe@example.com
+              password: StrongPass123
+  responses:
+    '201':
+      description: User successfully registered
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [_id, name, email]
+            properties:
+              _id:
+                type: string
+                description: User unique identifier
+                example: 507f1f77bcf86cd799439011
+              name:
+                type: string
+                description: User's full name
+                example: John Doe
+              email:
+                type: string
+                format: email
+                description: User's email address
+                example: john.doe@example.com
+    '400':
+      $ref: '../../components/responses/400.yaml'
+    '409':
+      $ref: '../../components/responses/409.yaml'
+    '500':
+      $ref: '../../components/responses/500.yaml'
