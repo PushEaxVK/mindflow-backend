@@ -1,0 +1,27 @@
+type: object
+properties:
+  _id:
+    type: string
+    example: '6881563901add19ee16fd006'
+  name:
+    type: string
+    example: 'John Doe'
+  avatarUrl:
+    type: string
+    nullable: true
+    example: 'https://example.com/avatar.jpg'
+  role:
+    type: string
+    example: 'user'
+  savedArticles:
+    type: array
+    items:
+      type: string
+    example: []
+  articlesAmount:
+    type: integer
+    example: 2
+required:
+  - _id
+  - name
+  - role
