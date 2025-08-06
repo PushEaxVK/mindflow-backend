@@ -13,14 +13,16 @@ export const getRecommendedArticlesById = async (excludeId, limit = 3) => {
   const randomArticles = await Article.aggregate([
     { $match: { _id: { $ne: excludeId } } },
     { $sample: { size: limit * 3 } },
+    { $project: { _id: 1 } },
   ]);
 
-  const uniqueMap = new Map();
-  randomArticles.forEach((art) => {
-    uniqueMap.set(art._id.toString(), art);
-  });
+  const ids = randomArticles.map((doc) => doc._id);
 
-  return Array.from(uniqueMap.values()).slice(0, limit);
+  const articles = await Article.find({ _id: { $in: ids } })
+    .populate('ownerId', 'name')
+    .limit(limit);
+
+  return articles;
 };
 
 export const getRecommendedArticles = async (tags = []) => {
