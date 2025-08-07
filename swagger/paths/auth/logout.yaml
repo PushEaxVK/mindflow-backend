@@ -2,25 +2,73 @@ post:
   summary: User logout
   operationId: logoutUser
   tags: [Auth]
-  description: Logout user and invalidate current session
+  description: Logout user and invalidate current session. Clears refresh token cookies.
   security:
     - bearerAuth: []
   responses:
-    '204':
+    '200':
       description: User successfully logged out
       content:
         application/json:
           schema:
             type: object
-            required: [status, message]
+            required: [status, message, data]
             properties:
               status:
                 type: integer
-                example: 204
+                example: 200
+                description: HTTP status code
               message:
                 type: string
                 example: Successfully logged out!
+                description: Success message
+              data:
+                type: object
+                required: [message]
+                properties:
+                  message:
+                    type: string
+                    example: User logged out successfully
+                    description: Logout confirmation message
+          examples:
+            successful_logout:
+              summary: Successful logout response
+              value:
+                status: 200
+                message: Successfully logged out!
+                data:
+                  message: User logged out successfully
     '401':
-      $ref: '../../components/responses/401-users.yaml'
+      description: Unauthorized - No access token or invalid token
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [status, message, data]
+            properties:
+              status:
+                type: integer
+                example: 401
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  message:
+                    type: string
+          examples:
+            no_token:
+              summary: No access token provided
+              value:
+                status: 401
+                message: Access token required
+                data:
+                  message: No access token provided
+            invalid_token:
+              summary: Invalid or expired token
+              value:
+                status: 401
+                message: Access token expired
+                data: null
     '500':
       $ref: '../../components/responses/500.yaml'
