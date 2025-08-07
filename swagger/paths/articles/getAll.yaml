@@ -1,0 +1,80 @@
+get:
+  summary: Get all articles with pagination, filtering and sorting
+  tags:
+    - Articles
+  parameters:
+    - name: page
+      in: query
+      description: Page number for pagination
+      required: false
+      schema:
+        type: integer
+        default: 1
+    - name: limit
+      in: query
+      description: Number of articles per page
+      required: false
+      schema:
+        type: integer
+        default: 10
+    - name: sort
+      in: query
+      description: Field to sort by
+      required: false
+      schema:
+        type: string
+        default: createdAt
+    - name: order
+      in: query
+      description: Sort order ('asc' or 'desc')
+      required: false
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+    - name: tags
+      in: query
+      description: Filter by tags (comma separated)
+      required: false
+      schema:
+        type: string
+    - name: ownerId
+      in: query
+      description: Filter by owner id
+      required: false
+      schema:
+        type: string
+    - name: popular
+      in: query
+      description: If true, returns only popular articles
+      required: false
+      schema:
+        type: boolean
+  security: []
+  responses:
+    '200':
+      description: List of articles
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              articles:
+                type: array
+                items:
+                  $ref: '../../components/schemas/Article.yaml#/Article'
+              total:
+                type: integer
+                example: 42
+              page:
+                type: integer
+                example: 1
+              pages:
+                type: integer
+                example: 5
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'

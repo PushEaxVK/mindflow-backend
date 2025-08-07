@@ -9,6 +9,22 @@ export const getArticleById = async (id) => {
   return await Article.findById(id).populate('ownerId', 'name');
 };
 
+export const getRecommendedArticlesById = async (excludeId, limit = 3) => {
+  const randomArticles = await Article.aggregate([
+    { $match: { _id: { $ne: excludeId } } },
+    { $sample: { size: limit * 3 } },
+    { $project: { _id: 1 } },
+  ]);
+
+  const ids = randomArticles.map((doc) => doc._id);
+
+  const articles = await Article.find({ _id: { $in: ids } })
+    .populate('ownerId', 'name')
+    .limit(limit);
+
+  return articles;
+};
+
 export const getRecommendedArticles = async (tags = []) => {
   return await Article.find({ tags: { $in: tags } }).limit(5);
 };

@@ -1,0 +1,64 @@
+post:
+  summary: Create new article
+  tags:
+    - Articles
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          required:
+            - title
+            - desc
+            - article
+            - date
+            - ownerId
+            - file
+          properties:
+            title:
+              type: string
+              minLength: 3
+              maxLength: 48
+              example: "My Article Title"
+            desc:
+              type: string
+              minLength: 5
+              maxLength: 250
+              example: "Short article description"
+            article:
+              type: string
+              minLength: 100
+              maxLength: 4000
+              example: "Long article text ..."
+            date:
+              type: string
+              format: date
+              example: "2025-08-06"
+            ownerId:
+              type: string
+              example: "64d229aa56437ae1df09a123"
+            file:
+              type: string
+              format: binary
+  responses:
+    '201':
+      description: Successfully created article
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/Article.yaml#/Article'
+    '400':
+      description: Validation error or bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Description must be between 5 and 100 characters"
+
+

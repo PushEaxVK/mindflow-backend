@@ -1,0 +1,27 @@
+ArticleUpdate:
+  type: object
+  properties:
+    title:
+      type: string
+      minLength: 3
+      maxLength: 48
+      example: "Updated title"
+    desc:
+      type: string
+      maxLength: 250
+      example: "Updated description"
+    article:
+      type: string
+      minLength: 100
+      maxLength: 4000
+      example: "Updated article text"
+    date:
+      type: string
+      format: date
+      example: "2025-08-07"
+    ownerId:
+      type: string
+      example: "64d229aa56437ae1df09a123"
+    file:
+      type: string
+      format: binary

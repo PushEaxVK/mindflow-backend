@@ -1,0 +1,73 @@
+patch:
+  summary: Update article by ID
+  tags:
+    - Articles
+  parameters:
+    - name: id
+      in: path
+      required: true
+      description: Article ID
+      schema:
+        type: string
+  security:
+    - bearerAuth: []
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          type: object
+          required:
+            - title
+            - desc
+            - article
+          properties:
+            title:
+              type: string
+              minLength: 3
+              maxLength: 48
+              example: "Updated title"
+            desc:
+              type: string
+              maxLength: 250
+              example: "Updated description"
+            article:
+              type: string
+              minLength: 100
+              maxLength: 4000
+              example: "Updated article text"
+            date:
+              type: string
+              format: date
+              example: "2025-08-07"
+            ownerId:
+              type: string
+              example: "64d229aa56437ae1df09a123"
+            file:
+              type: string
+              format: binary
+  responses:
+    '200':
+      description: Article updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/Article.yaml#/Article'
+    '403':
+      description: Forbidden (not author or admin)
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'
+    '404':
+      description: Article not found
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'
+    '400':
+      description: Validation error or bad request
+      content:
+        application/json:
+          schema:
+            $ref: '../../components/schemas/ErrorResponse.yaml#/ErrorResponse'
