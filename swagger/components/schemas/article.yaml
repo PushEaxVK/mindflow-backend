@@ -1,0 +1,50 @@
+type: object
+properties:
+  _id:
+    type: string
+    example: '6881563901add19ee16fd006'
+  title:
+    type: string
+    example: 'Моя перша стаття'
+  content:
+    type: string
+    example: 'Це текст статті, який описує деталі...'
+  author:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: '6881563901add19ee16fd006'
+      name:
+        type: string
+        example: 'John Doe'
+      avatarUrl:
+        type: string
+        example: 'https://example.com/avatar.jpg'
+    required:
+      - _id
+      - name
+  tags:
+    type: array
+    items:
+      type: string
+      example: 'javascript'
+  imageUrl:
+    type: string
+    nullable: true
+    example: 'https://example.com/image.jpg'
+  createdAt:
+    type: string
+    format: date-time
+    example: '2025-08-06T12:34:56.789Z'
+  updatedAt:
+    type: string
+    format: date-time
+    example: '2025-08-06T12:34:56.789Z'
+required:
+  - _id
+  - title
+  - content
+  - author
+  - createdAt
+  - updatedAt
